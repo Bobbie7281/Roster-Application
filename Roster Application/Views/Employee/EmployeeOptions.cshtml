@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Employee options</h1>
+
+    <form method="post" action="/Home">
+        <div class="d-grid gap-4">
+            <button class="btn btn-lg btn-primary" type="submit" asp-controller="Employee" asp-action="CreateNewEmployee">Create a New Employee</button>
+            <button class="btn btn-lg btn-primary" type="submit" asp-controller="Employee" asp-action="EditExistingEmployee">Edit Existing Employee</button>
+        </div>
+    </form>
+</div>

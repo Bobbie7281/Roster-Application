@@ -1,0 +1,29 @@
+﻿@model CategoryModel
+
+
+<div class="text-primary p-3">
+    
+    <h1 class="display-4 text-center mb-5">Create A New Category</h1>
+    <partial name="_Notifications" />
+    @*<div class="form-group has-success">
+        <label class="form-label mt-4" for="inputValid">Valid input</label>
+        <input type="text" value="correct value" class="form-control is-valid" id="inputValid">
+        <div class="valid-feedback">Success! You've done it.</div>
+    </div>
+    <div class="form-group has-danger">
+        <label class="form-label mt-4" for="inputInvalid">Invalid input</label>
+        <input type="text" value="wrong value" class="form-control is-invalid" id="inputInvalid">
+        <div class="invalid-feedback">Sorry, that username's taken. Try another?</div>
+    </div>*@
+
+    <form method="post" action="/Category/Create Category">
+    <div class="mb-3 row p-1">
+     <label asp-for="@Model.CategoryName" class="mb-3" style="font-size:x-large"></label>
+         <input type="text" class="border p-3 form-control" name="CategoryName">
+      </div>
+        <button type="submit" class="btn btn-primary btn-lg">Save</button>
+        <button type="submit" class="btn btn-primary btn-lg">Home</button>
+
+    </form>
+  
+</div>

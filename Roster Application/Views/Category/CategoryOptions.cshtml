@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Category options</h1>
+    <partial name="_Notifications" />
+    <form method="post" action="/Home">
+        <div class="d-grid gap-4">
+            <button class="btn btn-lg btn-primary" type="submit" asp-controller="Category" asp-action="CreateNewCategory">Create a New Category</button>
+            <button class="btn btn-lg btn-primary" type="submit" asp-controller="Category" asp-action="ListOfClientsPerCategory">List of Clients Per Category</button>
+            <button class="btn btn-lg btn-primary" type="submit" asp-controller="Category" asp-action="EditExistingCategory">Edit Existing Category</button>
+        </div>
+    </form>
+</div>
