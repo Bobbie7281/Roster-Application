@@ -8,6 +8,5 @@ namespace Roster_Application.Models.Models_Interface
         public int CategoryId { get; set; }
 
         public string? CategoryName { get; set; }
-
     }
 }

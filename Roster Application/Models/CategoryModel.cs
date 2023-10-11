@@ -16,5 +16,5 @@ namespace Roster_Application.Models
         [DisplayName ("Provide a Category Name: ")]
         public string ?CategoryName { get; set; }
 
-    }
+    } 
 }
