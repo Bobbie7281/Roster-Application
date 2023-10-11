@@ -1,31 +1,31 @@
 ﻿@model List<CategoryModel>
 @{
-    //string? selectedItem = "";
+    //string static selectedOption="";
 }
 
 <div class="text-primary p-3">
 
 <h1 class="display-4 text-center">Edit Category Name:</h1>
 <partial name="_Notifications" />
-    
- <form method="post" action="/Category/Edit Category">
+
+    <form method="post" action="/Category/AddNewCategoryName">
    <div class="mb-3 row p-3">
      <label class="p-0" style="font-size:x-large">Choose a category to Edit:</label>
      <div class="row mb-5 p-3">
-       <select class="form-select" name="editCategory">
+       <select class="form-select" name="editCategory" id="selectCategory">
            
            @foreach(var item in Model)
             {
                 if (item.CategoryName != "")
                 {
-                   <option> @item.CategoryName</option>
+                   <option>@item.CategoryName</option>
                 }
             }
        </select>
      </div>
          <div class="row">
             <label class="p-0" style="font-size:x-large">Edit Selected Category Name:</label>
-            <input type="text" class="border p-3 form-control" value="" name="UpdatdCategoryName">
+            <input type="text" class="border p-3 form-control" id="input" name="UpdatdCategoryName" disabled>
          </div>
    </div>
     
@@ -36,3 +36,22 @@
 
 </div>
 
+@*This script is used to copy the selected text from the dropdown section to the input section for editing*@
+@section Scripts{
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+
+        $(document).ready(function() {
+
+            $("#selectCategory").on("change", function () {
+                var selectOptionText = $(this).find("option:selected").text();
+                $("#input").val(selectOptionText);
+
+                //Once the category name is choosen for editing, the disabled attribute will change to enable.
+                document.getElementById("input").removeAttribute("disabled");
+                
+            });
+        });
+    </script>
+}
