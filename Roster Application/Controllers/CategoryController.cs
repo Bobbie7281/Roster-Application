@@ -64,8 +64,8 @@ namespace Roster_Application.Controllers
 
             return View(listOfCategories);//pass the category list to the view
         }
-        [HttpPost, ActionName("Edit Category")]
-        public IActionResult EditExistingCategory(CategoryModel obj)
+        [HttpPost]
+        public IActionResult AddNewCategoryName()
         {
             _categoryModel = _db.Categories.FirstOrDefault(x => x.CategoryName == Request.Form["editCategory"].ToString());//Get the selected Category Name from the form
 
@@ -78,6 +78,7 @@ namespace Roster_Application.Controllers
                 _categoryModel!.CategoryName = updatedName;//change the category name with the new name (updatedName).
 
                 _db.Categories.Update((CategoryModel)_categoryModel); //Update the database.
+
                 _db.SaveChanges();//Save chnages into the database.
                 TempData["Successful"] = "Category name changed successfully!"; //Display successful message
             }
