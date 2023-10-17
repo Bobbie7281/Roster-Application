@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Roster_Application.Data;
+using Roster_Application.Models;
 using Roster_Application.Models.Models_Interface;
 
 namespace Roster_Application.Controllers
@@ -19,13 +20,45 @@ namespace Roster_Application.Controllers
             _scheduleModel = scheduleModel;
             _categoryModel = categoryModel;
         }
-        public IActionResult ScheduleOptions() 
+        public IActionResult ScheduleOptions()
         {
             return View();
         }
+
         public IActionResult CreateNewSchedule()
         {
-            return View();
+            _scheduleModel!.ScheduleName = "";
+            return View(_scheduleModel);
+        }
+        [HttpPost, ActionName("Create Schedule")]
+        public IActionResult CreateNewSchedule(ScheduleModel obj)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Add(obj);
+                _db.SaveChanges();
+            }
+            return RedirectToAction("CreateNewSchedule", "Schedule");
+        }
+        [HttpPost]
+        public IActionResult CheckScheduleName(string inputValue) //This method is called by the Jquery script to check is the category name
+                                                                  //already exists in database without refreshing the whole page.
+        {
+            bool isValid;
+
+            var checkCategoryName = _db.Categories.FirstOrDefault(x => x.CategoryName == inputValue);//checks if the value of inputValue exists in the database and returns the name if it exists.
+
+            if (checkCategoryName == null)
+            {
+                isValid = true;
+                _scheduleModel!.ScheduleName = inputValue;
+            }
+            else
+            {
+                isValid = false;
+            }
+
+            return Json(new { isValid });
         }
         public IActionResult EditExistingSchedule()
         {

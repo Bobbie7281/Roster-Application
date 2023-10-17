@@ -13,6 +13,7 @@
      <label class="p-0" style="font-size:x-large">Choose a category to Edit:</label>
      <div class="row mb-5 p-3">
        <select class="form-select" name="editCategory" id="selectCategory">
+          <option value="" disabled selected>Choose a category</option> @*This will serve as a placeholder in the dropdown list*@
            
            @foreach(var item in Model)
             {
