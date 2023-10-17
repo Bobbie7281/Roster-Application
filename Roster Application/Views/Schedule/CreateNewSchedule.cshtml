@@ -1,1 +1,129 @@
-﻿<h1>Create New Schedule View</h1>
+﻿@model ScheduleModel
+
+
+<div class="text-primary p-1">
+
+    <h1 class="display-4 text-center mb-5">Create A New Schedule</h1>
+    <partial name="_Notifications" />
+    
+    <label asp-for="@Model.ScheduleName" class="mb-0 row p-6" style="font-size:x-large" id="scheduleName"></label>
+    <div class="mb-1 pt-2 d-flex">
+        
+        <input class="border-1 col-sm-4 mb-0 row p-6" name="ScheduleName" id="myInput" style="font-size:x-large">
+        <button class="btn btn-primary btn-lg p1" id="btn">Create</button>
+     </div>
+</div>
+
+   <div>
+       <form method="post" action="/Schedule/Create Schedule">
+    <div class="form-group row p-1" style="font-size:x-large">
+        <div class="mb-0 row p-6">
+            <label asp-for="@Model.ScheduleName" class="p-0" style="font-size:x-large" id="confirmedName" hidden="hidden"></label>
+            <input asp-for="@Model.ScheduleName" class="col-sm-5" style="font-size:large" id="destinationInput" hidden="hidden">
+            <span asp-validation-for="@Model.ScheduleMonTotHours" class="text-danger"></span>
+        </div>
+        <div class="mb-0 row p-2">
+            <label asp-for="@Model.ScheduleMonTotHours" class="p-0" style="font-size:x-large"></label>
+            <input asp-for="@Model.ScheduleMonTotHours" class="col-sm-1" style="font-size:large" id="Mon" disabled="disabled">
+            <span asp-validation-for="@Model.ScheduleMonTotHours" class="text-danger"></span>
+         </div>
+            <div class="mb-0 row p-2">
+            <label asp-for="@Model.ScheduleTueTotHours" class="p-0" style="font-size:x-large"></label>
+                <input asp-for="@Model.ScheduleTueTotHours" class="col-sm-1" style="font-size:large" id="Tue" disabled="disabled">
+            <span asp-validation-for="@Model.ScheduleTueTotHours" class="text-danger"></span>
+         </div>
+         <div class="mb-0 row p-2">
+            <label asp-for="@Model.ScheduleWedTotHours" class="p-0" style="font-size:x-large"></label>
+                <input asp-for="@Model.ScheduleWedTotHours" class="col-sm-1" style="font-size:large" id="Wed" disabled="disabled">
+            <span asp-validation-for="@Model.ScheduleWedTotHours" class="text-danger"></span>
+         </div>
+         <div class="mb-0 row p-2">
+            <label asp-for="@Model.ScheduleThurTotHours" class="p-0" style="font-size:x-large"></label>
+                <input asp-for="@Model.ScheduleThurTotHours" class="col-sm-1" style="font-size:large" id="Thur" disabled="disabled">
+            <span asp-validation-for="@Model.ScheduleThurTotHours" class="text-danger"></span>
+          </div>
+         <div class="mb-0 row p-2">
+             <label asp-for="@Model.ScheduleFriTotHours" class="p-0" style="font-size:x-large"></label>
+                <input asp-for="@Model.ScheduleFriTotHours" class="col-sm-1" style="font-size:large" id="Fri" disabled="disabled">
+             <span asp-validation-for="@Model.ScheduleFriTotHours" class="text-danger"></span>
+         </div>
+         <div class="mb-0 row p-2">
+             <label asp-for="@Model.ScheduleSatTotHours" class="p-0" style="font-size:x-large"></label>
+                <input asp-for="@Model.ScheduleSatTotHours" class="col-sm-1" style="font-size:large" id="Sat" disabled="disabled">
+             <span asp-validation-for="@Model.ScheduleSatTotHours" class="text-danger"></span>
+         </div>
+          <div class="mb-0 row p-2">
+             <label asp-for="@Model.ScheduleSunTotHours" class="p-0" style="font-size:x-large"></label>
+                <input asp-for="@Model.ScheduleSunTotHours" class="col-sm-1" style="font-size:large" id="Sun" disabled="disabled">
+             <span asp-validation-for="@Model.ScheduleSunTotHours" class="text-danger"></span>
+          </div>
+
+    </div>
+        <div class="mb-0 pt-5">
+        <button class="btn btn-primary btn-lg" type="submit" id="save">Save</button>
+        <button type="submit" asp-controller="Schedule" asp-action="ScheduleOptions" class="btn btn-primary btn-lg">Back</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    @*The below script will check if the category name exists in the database without the need reload the whole page.
+        This code didn't work when the input field and button where in a form <form></form>'
+    *@
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#btn").click (function () { //When the button with id "btn" is clicked, the following with execute.
+                var inputValue = $("#myInput").val();//takes the value of the input field with the id "myInput and saves it into the variable inputValue"
+
+                $.ajax({
+                    type:"POST",
+                    url: "/Schedule/CheckScheduleName", //Schedule is the controller name and CheckScheduleName is the method inside the controller
+                    data: { inputValue:inputValue },//The data passed to the CheckScheduleName method.
+                    success: function (response) {
+                        if (response.isValid) //checks if the Json returned value from the method is true or false.
+                        {
+                            //if response is true execute the following.
+                            alert("Category Name Successfull");
+                            //$("#scheduleName").hide();
+                            //$("#myInput").hide();
+                            $("#btn").hide();
+                            //document.getElementById("confirmedName").removeAttribute("hidden");
+                            //document.getElementById("destinationInput").removeAttribute("hidden");
+                            document.getElementById("myInput").setAttribute("disabled","disabled");//disable the input field
+                            document.getElementById("btn").setAttribute("disabled", "disabled"); //disable the create button
+                            document.getElementById("Mon").removeAttribute("disabled"); //Enable all the inputs from Mon - Sun
+                            document.getElementById("Tue").removeAttribute("disabled");
+                            document.getElementById("Wed").removeAttribute("disabled");
+                            document.getElementById("Thur").removeAttribute("disabled");
+                            document.getElementById("Fri").removeAttribute("disabled");
+                            document.getElementById("Sat").removeAttribute("disabled");
+                            document.getElementById("Sun").removeAttribute("disabled");
+                        }
+                        else 
+                        {
+                            //if response is false execute the following.
+                            alert("Category Name \"" + inputValue + "\" is not valid because it already exists in the database. Please choose another name.");
+                        }fghfgh
+                    }
+                });
+            });
+
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () { 
+            var $sourceInput = $("#myInput");
+            var $destinationInput = $("#destinationInput");
+
+            $sourceInput.on("input", function () {
+                $destinationInput.val($sourceInput.val());
+            })
+        })
+            
+    </script>
+
+    }
+    
