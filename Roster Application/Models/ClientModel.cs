@@ -21,7 +21,9 @@ namespace Roster_Application.Models
         public string ?ClientContactDetails { get; set; }
 
         [Required]
-        public string ?CategoryName {  get; set; }
+        [ForeignKey("CategoryId")]
+        public int ?CategoryID {  get; set; }
+        public CategoryModel ?CategoryId { get; set; }
 
         [Required]
         [ForeignKey("ScheduleId")]
