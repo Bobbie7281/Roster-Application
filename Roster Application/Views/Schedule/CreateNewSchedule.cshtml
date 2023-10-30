@@ -60,7 +60,7 @@
 
     </div>
         <div class="mb-0 pt-5">
-        <button class="btn btn-primary btn-lg" type="submit" id="save">Save</button>
+        <button class="btn btn-primary btn-lg" type="submit" id="save" disabled="disabled">Save</button>
         <button type="submit" asp-controller="Schedule" asp-action="ScheduleOptions" class="btn btn-primary btn-lg">Back</button>
         </div>
     </form>
@@ -70,7 +70,7 @@
     @*The below script will check if the category name exists in the database without the need reload the whole page.
         This code didn't work when the input field and button where in a form <form></form>'
     *@
-    <partial name="_ValidationScriptsPartial" />
+    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -79,18 +79,16 @@
 
                 $.ajax({
                     type:"POST",
-                    url: "/Schedule/CheckScheduleName", //Schedule is the controller name and CheckScheduleName is the method inside the controller
+                    url: "/Schedule/SCheckScheduleName", //Schedule is the controller name and CheckScheduleName is the method inside the controller
                     data: { inputValue:inputValue },//The data passed to the CheckScheduleName method.
                     success: function (response) {
                         if (response.isValid) //checks if the Json returned value from the method is true or false.
                         {
                             //if response is true execute the following.
                             alert("Category Name Successfull");
-                            //$("#scheduleName").hide();
-                            //$("#myInput").hide();
+                            
                             $("#btn").hide();
-                            //document.getElementById("confirmedName").removeAttribute("hidden");
-                            //document.getElementById("destinationInput").removeAttribute("hidden");
+                            
                             document.getElementById("myInput").setAttribute("disabled","disabled");//disable the input field
                             document.getElementById("btn").setAttribute("disabled", "disabled"); //disable the create button
                             document.getElementById("Mon").removeAttribute("disabled"); //Enable all the inputs from Mon - Sun
@@ -100,12 +98,13 @@
                             document.getElementById("Fri").removeAttribute("disabled");
                             document.getElementById("Sat").removeAttribute("disabled");
                             document.getElementById("Sun").removeAttribute("disabled");
+                            document.getElementById("save").removeAttribute("disabled");
                         }
                         else 
                         {
                             //if response is false execute the following.
-                            alert("Category Name \"" + inputValue + "\" is not valid because it already exists in the database. Please choose another name.");
-                        }fghfgh
+                            alert("Category Name \"" + inputValue + "\" is not valid either because it already exists in the database or the name contained whitespaces. Please choose another name.");
+                        }
                     }
                 });
             });
