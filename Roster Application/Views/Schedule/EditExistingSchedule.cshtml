@@ -1,1 +1,199 @@
-﻿<h1>Edit Schedule View</h1>
+﻿@model List<ScheduleModel>
+<div id="viewContainer">
+
+<div class="text-primary p-3">
+
+    <h1 class="display-4 text-center">Edit Schedule Data:</h1>
+    <partial name="_Notifications" />
+        
+    @*<form method="post" action="/Schedule/SCheckDataPriorSaving">*@
+        <div class="mb-3 row p-3">
+            <label class="p-0" style="font-size:x-large">Choose a schedule to Edit:</label>
+            <div class="row mb-0 p-3">
+                <select class="form-select p-3" name="editSchedule" id="selectSchedule"> 
+                    <option value="" disabled selected>Choose a schedule</option> @*This will serve as a placeholder in the dropdown list*@
+
+                    @foreach (var item in Model)
+                    {
+                        if (item.ScheduleName != "")
+                        {
+                            <option>@item.ScheduleName</option>
+                        }
+                    }
+                   
+                </select>
+            </div>
+        </div>
+    @*</form>*@
+         <div class="row">
+           <label class="p-0" style="font-size:x-large" id="lbname">Edit Selected Schedule:</label>
+            <input type="text" value="" class="border p-3 form-control" name="name" id="scheduleName" disabled="disabled">
+            </div>
+        <div class="mb-0 row p-6">
+            <label class="p-0" style="font-size:x-large" id="lbmon">Mon Hrs</label>
+            <input type="text" value="" class="border p-3 form-control" name="mon" id="monday" disabled="disabled">
+            <span class="text-danger"></span>
+        </div>
+        <div class="mb-0 row p-6">
+            <label class="p-0" style="font-size:x-large" id="lbtue">Tue Hrs</label>
+            <input type="text" value="" class="border p-3 form-control" name="tue" id="tuesday" disabled="disabled">
+            <span class="text-danger"></span>
+        </div>
+        <div class="mb-0 row p-6">
+            <label class="p-0" style="font-size:x-large" id="lbwed">Wed Hrs</label>
+            <input type="text" value="" class="border p-3 form-control" name="wed" id="wednesday" disabled="disabled">
+            <span class="text-danger"></span>
+        </div>
+        <div class="mb-0 row p-6">
+            <label class="p-0" style="font-size:x-large" id="lbthur">Thur Hrs</label>
+            <input type="text" value="" class="border p-3 form-control" name="thur" id="thursday" disabled="disabled">
+            <span class="text-danger"></span>
+        </div>
+        <div class="mb-0 row p-6">
+            <label class="p-0" style="font-size:x-large" id="lbfri">Fri Hrs</label>
+            <input type="text" value="" class="border p-3 form-control" name="fri" id="friday" disabled="disabled">
+            <span class="text-danger"></span>
+        </div>
+        <div class="mb-0 row p-6">
+            <label class="p-0" style="font-size:x-large" id="lbsat">Sat Hrs</label>
+            <input type="text" value="" class="border p-3 form-control" name="sat" id="saturday" disabled="disabled">
+            <span class="text-danger"></span>
+        </div>
+        <div class="mb-0 row p-6">
+            <label class="p-0" style="font-size:x-large" id="lbsun">Sun Hrs</label>
+            <input type="text" value="" class="border p-3 form-control" name="sun" id="sunday" disabled="disabled">
+            <span class="text-danger"></span>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-1 p-3">
+                    <button class="btn btn-primary btn-lg" id="save" disabled="disabled">Save</button>
+                </div>
+                
+                <div class="col-md-1 p-3">
+                  <form method="post" action="/Schedule/ScheduleOptions">
+                   <button type="submit" class="btn btn-lg btn-primary" id="back">Back</button>
+                  </form>
+                </div>
+            </div>
+        </div>
+</div>
+</div>
+
+@*This script is used to search for the selected Schedule in the database and update the input fields with the related data.*@
+@section Scripts{
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        
+        $(document).ready(function () {
+
+            $("#selectSchedule").on("change", function () {
+                var selectSchedule = $(this).find("option:selected").text();
+                $.ajax({
+                    url: "/Schedule/SGetData",
+                    type: "POST",
+                    data: { scheduleName: selectSchedule },
+                    success: function (data) {
+
+                        document.getElementById("selectSchedule").setAttribute("disabled", "disabled");
+                        document.getElementById("scheduleName").removeAttribute("disabled");
+                        document.getElementById("monday").removeAttribute("disabled");
+                        document.getElementById("tuesday").removeAttribute("disabled");
+                        document.getElementById("wednesday").removeAttribute("disabled");
+                        document.getElementById("thursday").removeAttribute("disabled");
+                        document.getElementById("friday").removeAttribute("disabled");
+                        document.getElementById("saturday").removeAttribute("disabled");
+                        document.getElementById("sunday").removeAttribute("disabled");
+                        document.getElementById("save").removeAttribute("disabled");
+
+                        $("#scheduleName").val(data.scheduleName);
+                        $("#monday").val(data.scheduleMonTotHours);
+                        $("#tuesday").val(data.scheduleTueTotHours);
+                        $("#wednesday").val(data.scheduleWedTotHours);
+                        $("#thursday").val(data.scheduleThurTotHours);
+                        $("#friday").val(data.scheduleFriTotHours);
+                        $("#saturday").val(data.scheduleSatTotHours);
+                        $("#sunday").val(data.scheduleSunTotHours);       
+                    },
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#save").click (function () {
+                var selectedName = $("#selectSchedule").val();
+                var name = $("#scheduleName").val();
+                var mon = $("#monday").val();
+                var tue = $("#tuesday").val();
+                var wed = $("#wednesday").val();
+                var thur = $("#thursday").val();
+                var fri = $("#friday").val();
+                var sat = $("#saturday").val();
+                var sun = $("#sunday").val();
+                var message="The folowing errors where encountered:\n\n";
+
+                $.ajax({
+                url: "/Schedule/SCheckDataPriorSaving",
+                type:"POST",
+                    data: { selectedSchedule: selectedName, newSchName: name, monHrs: mon, tueHrs: tue, wedHrs: wed, thurHrs: thur, friHrs: fri, satHrs: sat, sunHrs: sun },
+                success: function(data) 
+                {
+                    //update all the input fields with the returned data from the method SCheckDataPriorSaving
+                    if (data[0] == "Orange") { $("#scheduleName").css("background-color", "orange"); message += "-Schedule Name, either exists or blank or not in the correct format.\n"; }
+                        if (data[1] == "Orange") { $("#monday").css("background-color", "orange"); message += "-Monday Hours are either blank or not in the correct format.\n"; }
+                        if (data[2] == "Orange") { $("#tuesday").css("background-color", "orange"); message += "-Tuesday Hours are either blank or not in the correct format.\n"; }
+                        if (data[3] == "Orange") { $("#wednesday").css("background-color", "orange"); message += "-Wednesday Hours are either blank or not in the correct format.\n"; }
+                        if (data[4] == "Orange") { $("#thursday").css("background-color", "orange"); message += "-Thursday Hours are either blank or not in the correct format.\n"; }
+                        if (data[5] == "Orange") { $("#friday").css("background-color", "orange"); message += "-Friday Hours are either blank or not in the correct format.\n"; }
+                        if (data[6] == "Orange") { $("#saturday").css("background-color", "orange"); message += "-Saturday Hours are either blank or not in the correct format.\n"; }
+                        if (data[7] == "Orange") { $("#sunday").css("background-color", "orange"); message += "-Sunday Hours are not in the correct format.\n"; }
+
+                    if(data[8]==0)//data at location 8 stores the amount of errors encountered while checking the data. If the amount is 0, execute the following code. 
+                    {
+                        $.ajax({
+                            url: "/Schedule/EditSchedule",
+                            type: "POST",
+                            data: { selectedSchedule: selectedName, newSchName: name, monHrs: mon, tueHrs: tue, wedHrs: wed, thurHrs: thur, friHrs: fri, satHrs: sat, sunHrs: sun },
+                            success: function (response) {
+                                if(response.isValid)
+                                {
+                                    //alert("Save Successfully");
+                                    //if (confirm) //after pressing the ok button of the message, the page will refresh
+                                    //{ 
+                                        location.reload();
+                                    //}
+                                }
+                            }
+                        });
+                    }
+                    else
+                    {
+                        alert(message+="\n Saving not possible. Correct all errors in order to save.");
+                    }
+                }
+                });
+            });
+        });
+    </script>
+    <script>
+
+        $(document).ready(function () {
+            $("#refresh").click(function () {
+                console.log("Testing");
+                $.ajax({
+                    url: "/Schedule/EditSchedule",
+                    type: "POST",
+                    success: function () { 
+                        consol.log("Test");
+                        location.reload();
+                    }
+                });
+            });
+        });
+
+    </script>
+    
+    }
