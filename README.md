@@ -7,14 +7,14 @@ Features to be included in this app are as follows:
 
 -Being able to rename the categories with all the necessary checkings (i.e blank names and duplicate names are not accepted) (Already functional)
 
--Create differnt type of schedules (Still in progress)
+-Create differnt type of schedules (Already functional)
 
 -Create client or area profile (Still in progress)
 
 -Create Employee profile. (Still in progress)
 
--Creating a schedule. Schedule should have the necessary features to notify the user of any mistakes. (Still in progress)
+-Creating a roster. The Roster should have the necessary features to notify the user of any mistakes. (Still in progress)
 
--Sending the schedule to employees via email. (Still in progress)
+-Sending the Roster to employees via email. (Still in progress)
 
 -Being able to issue different kind of reports and save them either in PDF or Excel format. (Still in progress)
