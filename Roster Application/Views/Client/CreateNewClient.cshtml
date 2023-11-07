@@ -1,1 +1,141 @@
-﻿<h1>Create New Client View</h1>
+﻿@model ClientModel
+
+
+<div class="text-primary p-1">
+
+    <h1 class="display-4 text-center mb-5">Create A New Client</h1>
+    <partial name="_Notifications" />
+
+    <label asp-for="@Model.ClientName" class="mb-0 row p-6" style="font-size:x-large" id="clientName"></label>
+    <div class="mb-1 pt-2 d-flex">
+
+        <input class="border-1 col-sm-8 mb-0 row p-6" name="clientName" id="myInput" style="font-size:x-large">
+        <button class="btn btn-primary btn-lg p1" id="btn">Create</button>
+    </div>
+</div>
+
+<div>
+    <form method="post" action="/Schedule/Create Schedule">
+        <div class="form-group row p-1" style="font-size:x-large">
+            <div class="mb-0 row p-6">
+                <label asp-for="@Model.ClientName" class="p-0" style="font-size:x-large" id="confirmedName" hidden="hidden"></label>
+                <input asp-for="@Model.ClientName" class="mb-1 pt-4" style="font-size:large" id="destinationInput" hidden="hidden">
+                <span asp-validation-for="@Model.ClientName" class="text-danger"></span>
+            </div>
+            <div class="mb-0 row p-2">
+                <label asp-for="@Model.ClientAddress" class="p-0" style="font-size:x-large"></label>
+                <input asp-for="@Model.ClientAddress" class="mb-1 pt-4" style="font-size:large" id="Address" disabled="disabled">
+                <span asp-validation-for="@Model.ClientAddress" class="text-danger"></span>
+            </div>
+            <div class="mb-0 row p-2">
+                <label asp-for="@Model.ClientContactDetails" class="p-0" style="font-size:x-large"></label>
+                <input asp-for="@Model.ClientContactDetails" class="mb-1 pt-4" style="font-size:large" id="Contact" disabled="disabled">
+                <span asp-validation-for="@Model.ClientContactDetails" class="text-danger"></span>
+            </div>
+            <div class="mb-0 row p-2">
+                <label asp-for="@Model.ScheduleID" class="p-0" style="font-size:x-large"></label>
+                <select class="mb-1 pt-4" style="font-size:large" name="editSchedule" id="scheduleOptions" disabled="disabled">
+                    <option value="" disabled selected >Select a schedule</option> @*This will serve as a placeholder in the dropdown list*@
+                    <span asp-validation-for="@Model.ScheduleID" class="text-danger"></span>
+                </select>
+            </div>
+            <div class="mb-0 row p-2">
+                <label asp-for="@Model.CategoryID" class="p-0" style="font-size:x-large"></label>
+                <select class="mb-1 pt-4" style="font-size:large" name="editSchedule" id="categoryOptions" disabled="disabled">
+                    <option value="" disabled selected>Select a category</option> @*This will serve as a placeholder in the dropdown list*@
+                    <span asp-validation-for="@Model.CategoryID" class="text-danger"></span>
+                </select>
+            </div>
+            <div class="mb-0 row p-2">
+                <label asp-for="@Model.TotalHours" class="p-0" style="font-size:x-large"></label>
+                <input asp-for="@Model.TotalHours" class="mb-1 pt-4" style="font-size:large" id="TotalHours" disabled="disabled">
+                <span asp-validation-for="@Model.TotalHours" class="text-danger"></span>
+            </div>
+            
+        </div>
+        <div class="mb-0 pt-5">
+            <button class="btn btn-primary btn-lg" type="submit" id="save" disabled="disabled">Save</button>
+            <button type="submit" asp-controller="Client" asp-action="ClientOptions" class="btn btn-primary btn-lg">Back</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    @*The below script will check if the category name exists in the database without the need reload the whole page.
+        This code didn't work when the input field and button where in a form <form></form>'
+    *@
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#btn").click(function () { //When the button with id "btn" is clicked, the following with execute.
+                var inputValue = $("#myInput").val();//takes the value of the input field with the id "myInput and saves it into the variable inputValue"
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Client/SCheckCheckClientName", //Schedule is the controller name and CheckScheduleName is the method inside the controller
+                    data: { inputValue: inputValue },//The data passed to the CheckScheduleName method.
+                    success: function (response) {
+                        if (response.isValid) //checks if the Json returned value from the method is true or false.
+                        {
+                            //if response is true execute the following.
+                            alert("Client Name Successfull");
+
+                            $("#btn").hide();
+                            document.getElementById("myInput").setAttribute("disabled", "disabled");//disable the input field
+                            document.getElementById("btn").setAttribute("disabled", "disabled"); //disable the create button
+                            document.getElementById("Address").removeAttribute("disabled"); //Enable all the inputs from Mon - Sun
+                            document.getElementById("Contact").removeAttribute("disabled");
+                            document.getElementById("scheduleOptions").removeAttribute("disabled");
+                            document.getElementById("categoryOptions").removeAttribute("disabled");
+                            document.getElementById("TotalHours").removeAttribute("disabled");
+
+                            $.ajax({
+                                type:"GET",
+                                url:"/Client/SGetAllSchedules",
+                                data: {},
+                                success: function(data) {
+                                    $.each(data, function (index, item) {
+                                        var optionElement = $('<option>');
+                                        optionElement.text(item);
+                                        $("#scheduleOptions").append(optionElement);
+                                    });
+                                }
+                            });
+                            $.ajax({
+                                type:"GET",
+                                url:"/Client/SGetAllCategories",
+                                data: {},
+                                success: function(data) {
+                                    $.each(data, function (index, item) {
+                                        var optionElement = $('<option>');
+                                        optionElement.text(item);
+                                        $("#categoryOptions").append(optionElement);
+                                    });
+                                }
+                            });
+                        }
+                        else {
+                            //if response is false execute the following.
+                            alert("Client Name \"" + inputValue + "\" is not valid either because it already exists in the database or the name contained whitespaces. Please choose another name.");
+                        }
+                    }
+                });
+            });
+
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            var $sourceInput = $("#myInput");
+            var $destinationInput = $("#destinationInput");
+
+            $sourceInput.on("input", function () {
+                $destinationInput.val($sourceInput.val());
+            })
+        })
+
+    </script>
+
+    }
