@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Roster_Application.Data;
-using Roster_Application.Models;
 using Roster_Application.Models.Models_Interface;
 using System.Text.RegularExpressions;
 
@@ -32,16 +30,28 @@ namespace Roster_Application.Controllers
             _scheduleModel!.ScheduleName = "";
             return View(_scheduleModel);
         }
-
-        [HttpPost, ActionName("Create Schedule")]
-        public IActionResult CreateNewSchedule(ScheduleModel obj)
+        [HttpPost]
+        public IActionResult SCreateNewSchedule(string newSchName, string monHrs, string tueHrs, string wedHrs, string thurHrs, string friHrs, string satHrs, string sunHrs, string totHours)
         {
-            if (ModelState.IsValid)
-            {
-                _db.Add(obj);
-                _db.SaveChanges();
-            }
-            return RedirectToAction("CreateNewSchedule", "Schedule");
+            bool isValid = false;
+
+            _scheduleModel!.ScheduleName = newSchName;
+            _scheduleModel.ScheduleMonTotHours = int.Parse(monHrs);
+            _scheduleModel.ScheduleTueTotHours = int.Parse(tueHrs);
+            _scheduleModel.ScheduleWedTotHours = int.Parse(wedHrs);
+            _scheduleModel.ScheduleThurTotHours = int.Parse(thurHrs);
+            _scheduleModel.ScheduleFriTotHours = int.Parse(friHrs);
+            _scheduleModel.ScheduleSatTotHours = int.Parse(satHrs);
+            _scheduleModel.ScheduleSunTotHours = int.Parse(sunHrs);
+            _scheduleModel.ScheduleTotalHours = int.Parse(totHours);
+
+
+            _db.Add(_scheduleModel);
+            _db.SaveChanges();
+            isValid = true;
+            TempData["Successful"] = "New Schedule successfully saved.";
+
+            return Json(new { isValid });
         }
         [HttpPost]
         public IActionResult EditExistingSchedule()
@@ -49,7 +59,7 @@ namespace Roster_Application.Controllers
             var data = _db.Schedules.ToList();
             return View(data);
         }
-        public IActionResult EditSchedule(string selectedSchedule, string newSchName, string monHrs, string tueHrs, string wedHrs, string thurHrs, string friHrs, string satHrs, string sunHrs)
+        public IActionResult EditSchedule(string selectedSchedule, string newSchName, string monHrs, string tueHrs, string wedHrs, string thurHrs, string friHrs, string satHrs, string sunHrs, string totHours)
         {
             var obj = _db.Schedules.FirstOrDefault(x => x.ScheduleName == selectedSchedule);
             bool isValid = false;
@@ -62,6 +72,7 @@ namespace Roster_Application.Controllers
             obj.ScheduleFriTotHours = int.Parse(friHrs);
             obj.ScheduleSatTotHours = int.Parse(satHrs);
             obj.ScheduleSunTotHours = int.Parse(sunHrs);
+            obj.ScheduleTotalHours = int.Parse(totHours);
 
             _db.Schedules.Update(obj);
             _db.SaveChanges();
@@ -69,7 +80,7 @@ namespace Roster_Application.Controllers
             TempData["Successful"] = "Data Saved Successsfully!";
             isValid = true;
 
-            return Json (new { isValid });
+            return Json(new { isValid });
         }
         public IActionResult SCheckScheduleName(string inputValue) //This method is called by the Jquery script in the CreateNewSchedule view to check if the category name
                                                                    //already exists in database without refreshing the whole page.
@@ -101,7 +112,8 @@ namespace Roster_Application.Controllers
             return Json(data); //return data to the jQuery script.
         }
         [HttpPost]
-        public IActionResult SCheckDataPriorSaving(string selectedSchedule, string newSchName, string monHrs, string tueHrs, string wedHrs, string thurHrs, string friHrs, string satHrs, string sunHrs)
+        public IActionResult SCheckDataPriorSaving(bool editingCurrentSchedule, string selectedSchedule, string newSchName, string monHrs, string tueHrs, string wedHrs,
+            string thurHrs, string friHrs, string satHrs, string sunHrs)
         {
 
             var obj = _db.Schedules.FirstOrDefault(x => x.ScheduleName == newSchName);//Check if the new schedule name already exists in the database.
@@ -112,38 +124,45 @@ namespace Roster_Application.Controllers
             bool whitespaceDetected = false;
             string error = "Orange";
             string noError = "Green";
+            int totalHours = 0;
 
             List<string> errorsList = new List<string>();
             List<string> hoursList = new List<string>() { monHrs, tueHrs, wedHrs, thurHrs, friHrs, satHrs, sunHrs };
 
             int errors = 0;
-
-            if (newSchName == null)
+            if (editingCurrentSchedule)
             {
-                errors++;
-                errorsList.Add(error);
+                if (newSchName == null)
+                {
+                    errors++;
+                    errorsList.Add(error);
+                }
+                else
+                {
+                    whitespaceDetected = Regex.IsMatch(newSchName, checkForWhitespace);
+                }
+
+
+                if (whitespaceDetected)
+                {
+                    errors++;
+                    errorsList.Add(error);
+                }
+                else if (obj != null && newSchName != selectedSchedule)
+                {
+                    errors++;
+                    errorsList.Add(error);
+                }
+                else if (obj != null && obj!.ScheduleName == selectedSchedule)
+                {
+                    errorsList.Add(noError);
+                }
+                else if (!whitespaceDetected && obj == null && newSchName != null)
+                {
+                    errorsList.Add(noError);
+                }
             }
             else
-            {
-                whitespaceDetected = Regex.IsMatch(newSchName, checkForWhitespace);
-            }
-
-
-            if (whitespaceDetected)
-            {
-                errors++;
-                errorsList.Add(error);
-            }
-            else if (obj != null && newSchName!=selectedSchedule)
-            {
-                errors++;
-                errorsList.Add(error);
-            }
-            else if(obj!=null && obj!.ScheduleName==selectedSchedule)
-            {
-                errorsList.Add(noError);
-            }
-            else if (!whitespaceDetected && obj == null && newSchName != null)
             {
                 errorsList.Add(noError);
             }
@@ -156,6 +175,7 @@ namespace Roster_Application.Controllers
                     if (correctNumberFormat)
                     {
                         errorsList.Add(noError);
+                        totalHours += int.Parse(item);
                     }
                     else
                     {
