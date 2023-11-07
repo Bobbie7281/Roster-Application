@@ -9,7 +9,7 @@ Features to be included in this app are as follows:
 
 -Create differnt type of schedules (Already functional)
 
--Create client or area profile (Still in progress)
+-Create client or area profile (Already functional)
 
 -Create Employee profile. (Still in progress)
 
