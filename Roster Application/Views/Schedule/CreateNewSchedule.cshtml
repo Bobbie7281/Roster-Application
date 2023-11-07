@@ -9,17 +9,14 @@
     <label asp-for="@Model.ScheduleName" class="mb-0 row p-6" style="font-size:x-large" id="scheduleName"></label>
     <div class="mb-1 pt-2 d-flex">
         
-        <input class="border-1 col-sm-4 mb-0 row p-6" name="ScheduleName" id="myInput" style="font-size:x-large">
+        <input class="border-1 col-sm-4 mb-0 row p-6" name="ScheduleName" id="newScheduleName" style="font-size:x-large">
         <button class="btn btn-primary btn-lg p1" id="btn">Create</button>
      </div>
 </div>
-
-   <div>
-       <form method="post" action="/Schedule/Create Schedule">
     <div class="form-group row p-1" style="font-size:x-large">
         <div class="mb-0 row p-6">
             <label asp-for="@Model.ScheduleName" class="p-0" style="font-size:x-large" id="confirmedName" hidden="hidden"></label>
-            <input asp-for="@Model.ScheduleName" class="col-sm-5" style="font-size:large" id="destinationInput" hidden="hidden">
+            <input asp-for="@Model.ScheduleName" class="col-sm-5" style="font-size:large" id="copyNewScheduleName" hidden="hidden">
             <span asp-validation-for="@Model.ScheduleMonTotHours" class="text-danger"></span>
         </div>
         <div class="mb-0 row p-2">
@@ -29,27 +26,27 @@
          </div>
             <div class="mb-0 row p-2">
             <label asp-for="@Model.ScheduleTueTotHours" class="p-0" style="font-size:x-large"></label>
-                <input asp-for="@Model.ScheduleTueTotHours" class="col-sm-1" style="font-size:large" id="Tue" disabled="disabled">
+            <input asp-for="@Model.ScheduleTueTotHours" class="col-sm-1" style="font-size:large" id="Tue" disabled="disabled">
             <span asp-validation-for="@Model.ScheduleTueTotHours" class="text-danger"></span>
          </div>
          <div class="mb-0 row p-2">
             <label asp-for="@Model.ScheduleWedTotHours" class="p-0" style="font-size:x-large"></label>
-                <input asp-for="@Model.ScheduleWedTotHours" class="col-sm-1" style="font-size:large" id="Wed" disabled="disabled">
+            <input asp-for="@Model.ScheduleWedTotHours" class="col-sm-1" style="font-size:large" id="Wed" disabled="disabled">
             <span asp-validation-for="@Model.ScheduleWedTotHours" class="text-danger"></span>
          </div>
          <div class="mb-0 row p-2">
             <label asp-for="@Model.ScheduleThurTotHours" class="p-0" style="font-size:x-large"></label>
-                <input asp-for="@Model.ScheduleThurTotHours" class="col-sm-1" style="font-size:large" id="Thur" disabled="disabled">
+            <input asp-for="@Model.ScheduleThurTotHours" class="col-sm-1" style="font-size:large" id="Thur" disabled="disabled">
             <span asp-validation-for="@Model.ScheduleThurTotHours" class="text-danger"></span>
           </div>
          <div class="mb-0 row p-2">
              <label asp-for="@Model.ScheduleFriTotHours" class="p-0" style="font-size:x-large"></label>
-                <input asp-for="@Model.ScheduleFriTotHours" class="col-sm-1" style="font-size:large" id="Fri" disabled="disabled">
+             <input asp-for="@Model.ScheduleFriTotHours" class="col-sm-1" style="font-size:large" id="Fri" disabled="disabled">
              <span asp-validation-for="@Model.ScheduleFriTotHours" class="text-danger"></span>
          </div>
          <div class="mb-0 row p-2">
              <label asp-for="@Model.ScheduleSatTotHours" class="p-0" style="font-size:x-large"></label>
-                <input asp-for="@Model.ScheduleSatTotHours" class="col-sm-1" style="font-size:large" id="Sat" disabled="disabled">
+             <input asp-for="@Model.ScheduleSatTotHours" class="col-sm-1" style="font-size:large" id="Sat" disabled="disabled">
              <span asp-validation-for="@Model.ScheduleSatTotHours" class="text-danger"></span>
          </div>
           <div class="mb-0 row p-2">
@@ -57,13 +54,27 @@
                 <input asp-for="@Model.ScheduleSunTotHours" class="col-sm-1" style="font-size:large" id="Sun" disabled="disabled">
              <span asp-validation-for="@Model.ScheduleSunTotHours" class="text-danger"></span>
           </div>
+          <div class="mb-0 row p-2">
+              <label asp-for="@Model.ScheduleTotalHours" class="p-0" style="font-size:x-large"></label>
+              <input class="col-sm-1" style="font-size:large" id="Total" disabled="disabled">
+          </div>
+            <div class="mb-0 row p-2">
+                <input asp-for="@Model.ScheduleTotalHours" class="col-sm-1" style="font-size:large" id="copyTotal" hidden="hidden">
+                <span asp-validation-for="@Model.ScheduleTotalHours" class="text-danger"></span>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-1 p-3">
+                        <button class="btn btn-primary btn-lg" id="save" disabled="disabled">Save</button>
+                    </div>
 
-    </div>
-        <div class="mb-0 pt-5">
-        <button class="btn btn-primary btn-lg" type="submit" id="save" disabled="disabled">Save</button>
-        <button type="submit" asp-controller="Schedule" asp-action="ScheduleOptions" class="btn btn-primary btn-lg">Back</button>
-        </div>
-    </form>
+                    <div class="col-md-1 p-3">
+                        <form method="post" action="/Schedule/ScheduleOptions">
+                            <button type="submit" class="btn btn-lg btn-primary" id="back">Back</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
 </div>
 
 @section Scripts{
@@ -75,7 +86,7 @@
     <script>
         $(document).ready(function () {
             $("#btn").click (function () { //When the button with id "btn" is clicked, the following with execute.
-                var inputValue = $("#myInput").val();//takes the value of the input field with the id "myInput and saves it into the variable inputValue"
+                var inputValue = $("#newScheduleName").val();//takes the value of the input field with the id "newScheduleName" and saves it into the variable inputValue"
 
                 $.ajax({
                     type:"POST",
@@ -88,8 +99,8 @@
                             alert("Category Name Successfull");
                             
                             $("#btn").hide();
-                            
-                            document.getElementById("myInput").setAttribute("disabled","disabled");//disable the input field
+
+                            document.getElementById("newScheduleName").setAttribute("disabled", "disabled");//disable the input field
                             document.getElementById("btn").setAttribute("disabled", "disabled"); //disable the create button
                             document.getElementById("Mon").removeAttribute("disabled"); //Enable all the inputs from Mon - Sun
                             document.getElementById("Tue").removeAttribute("disabled");
@@ -103,7 +114,7 @@
                         else 
                         {
                             //if response is false execute the following.
-                            alert("Category Name \"" + inputValue + "\" is not valid either because it already exists in the database or the name contained whitespaces. Please choose another name.");
+                            alert("Schedule Name \"" + inputValue + "\" is not valid either because it already exists in the database or the name contained whitespaces. Please choose another name.");
                         }
                     }
                 });
@@ -111,18 +122,165 @@
 
         });
     </script>
+    <script>
+        $(document).ready(function () {
+            $("#save").click(function () {
+                var selectedName = $("#selectSchedule").val();
+                var name = $("#copyNewScheduleName").val();
+                var mon = $("#Mon").val();
+                var tue = $("#Tue").val();
+                var wed = $("#Wed").val();
+                var thur = $("#Thur").val();
+                var fri = $("#Fri").val();
+                var sat = $("#Sat").val();
+                var sun = $("#Sun").val();
+                var totalHours = $("#copyTotal").val();
+                var message = "The folowing errors where encountered:\n\n";
+
+                $.ajax({
+                    url: "/Schedule/SCheckDataPriorSaving",
+                    type: "POST",
+                    data: { editingCurrentSchedule: false, selectedSchedule: selectedName, newSchName: name, monHrs: mon, tueHrs: tue, wedHrs: wed, thurHrs: thur, friHrs: fri, satHrs: sat, sunHrs: sun },
+                    success: function (data) {
+                        //update all the input fields with the returned data from the method SCheckDataPriorSaving
+                        if (data[0] == "Orange") { $("#newScheduleName").css("background-color", "orange"); message += "-Schedule Name, either exists or blank or not in the correct format.\n"; }
+                        else { $("#newScheduleName").css("background-color", "white"); }
+
+                        if (data[1] == "Orange") { $("#Mon").css("background-color", "orange"); message += "-Monday Hours are either blank or not in the correct format.\n"; }
+                        else { $("#Mon").css("background-color", "white"); }
+
+                        if (data[2] == "Orange") { $("#Tue").css("background-color", "orange"); message += "-Tuesday Hours are either blank or not in the correct format.\n"; }
+                        else { $("#Tue").css("background-color", "white"); }
+
+                        if (data[3] == "Orange") { $("#Wed").css("background-color", "orange"); message += "-Wednesday Hours are either blank or not in the correct format.\n"; }
+                        else { $("#Wed").css("background-color", "white"); }
+
+                        if (data[4] == "Orange") { $("#Thur").css("background-color", "orange"); message += "-Thursday Hours are either blank or not in the correct format.\n"; }
+                        else { $("#Thur").css("background-color", "white"); }
+
+                        if (data[5] == "Orange") { $("#Fri").css("background-color", "orange"); message += "-Friday Hours are either blank or not in the correct format.\n"; }
+                        else { $("#Fri").css("background-color", "white"); }
+
+                        if (data[6] == "Orange") { $("#Sat").css("background-color", "orange"); message += "-Saturday Hours are either blank or not in the correct format.\n"; }
+                        else { $("#Sat").css("background-color", "white"); }
+
+                        if (data[7] == "Orange") { $("#Sun").css("background-color", "orange"); message += "-Sunday Hours are not in the correct format.\n"; }
+                        else { $("#Sun").css("background-color", "white"); }
+
+                        if (data[8] == 0)//data at location 8 stores the amount of errors encountered while checking the data. If the amount is 0, execute the following code.
+                        {
+                            $.ajax({
+                                url: "/Schedule/SCreateNewSchedule",
+                                type: "POST",
+                                data: { newSchName: name, monHrs: mon, tueHrs: tue, wedHrs: wed, thurHrs: thur, friHrs: fri, satHrs: sat, sunHrs: sun, totHours: totalHours },
+                                success: function (response) {
+                                    if (response.isValid) {
+                                        //alert("Save Successfully");
+                                        //if (confirm) //after pressing the ok button of the message, the page will refresh
+                                        //{
+                                        location.reload();
+                                        //}
+                                    }
+                                }
+                            });
+                        }
+                        else {
+                            alert(message += "\n Saving not possible. Correct all errors in order to save.");
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 
     <script>
-        $(document).ready(function () { 
-            var $sourceInput = $("#myInput");
-            var $destinationInput = $("#destinationInput");
+        $(document).ready(function () {
+            var $sourceInput = $("#newScheduleName");
+            var $copyNewScheduleName = $("#copyNewScheduleName");
 
             $sourceInput.on("input", function () {
-                $destinationInput.val($sourceInput.val());
+                $copyNewScheduleName.val($sourceInput.val());
             })
         })
             
     </script>
 
+    <script>
+        $(document).ready(function(){
+            var totalMonHours=0;
+            var totalTueHours=0;
+            var totalWedHours=0;
+            var totalThurHours=0;
+            var totalFriHours=0;
+            var totalSatHours=0;
+            var totalSunHours=0;
+
+            $("#Mon").on("change", function () {
+                if ($("#Mon").val() < 0) { $("#Mon").val(0);
+                }
+                else {
+                    totalMonHours = parseInt($("#Mon").val());
+                    var totalHours = totalMonHours + totalTueHours + totalWedHours + totalThurHours + totalFriHours + totalSatHours + totalSunHours;
+                    $("#Total").val(totalHours);
+                    $("#copyTotal").val(totalHours);
+                }
+            });
+            $("#Tue").on("change", function () {
+                if ($("#Tue").val() < 0) { $("#Tue").val(0); }
+                else 
+                {
+                    totalTueHours= parseInt($("#Tue").val());
+                    var totalHours = totalMonHours + totalTueHours + totalWedHours + totalThurHours + totalFriHours + totalSatHours + totalSunHours;
+                    $("#Total").val(totalHours);
+                    $("#copyTotal").val(totalHours);
+                }
+            });
+            $("#Wed").on("change", function () {
+                if ($("#Wed").val() < 0) { $("#Wed").val(0); }
+                else {
+                    totalWedHours = parseInt($("#Wed").val());
+                    var totalHours = totalMonHours + totalTueHours + totalWedHours + totalThurHours + totalFriHours + totalSatHours + totalSunHours;
+                    $("#Total").val(totalHours);
+                    $("#copyTotal").val(totalHours);
+                }
+            });
+            $("#Thur").on("change", function () {
+                if ($("#Thur").val() < 0) { $("#Thur").val(0); }
+                else {
+                    totalThurHours = parseInt($("#Thur").val());
+                    var totalHours = totalMonHours + totalTueHours + totalWedHours + totalThurHours + totalFriHours + totalSatHours + totalSunHours;
+                    $("#Total").val(totalHours);
+                    $("#copyTotal").val(totalHours);
+                }
+            });
+            $("#Fri").on("change", function () {
+                if ($("#Fri").val() < 0) { $("#Fri").val(0); }
+                else {
+                    totalFriHours = parseInt($("#Fri").val());
+                    var totalHours = totalMonHours + totalTueHours + totalWedHours + totalThurHours + totalFriHours + totalSatHours + totalSunHours;
+                    $("#Total").val(totalHours);
+                    $("#copyTotal").val(totalHours);
+                }
+            });
+            $("#Sat").on("change", function () {
+                if ($("#Sat").val() < 0) { $("#Sat").val(0); }
+                else {
+                    totalSatHours = parseInt($("#Sat").val());
+                    var totalHours = totalMonHours + totalTueHours + totalWedHours + totalThurHours + totalFriHours + totalSatHours + totalSunHours;
+                    $("#Total").val(totalHours);
+                    $("#copyTotal").val(totalHours);
+                }
+            });
+            $("#Sun").on("change", function () {
+                if ($("#Sun").val() < 0) { $("#Sun").val(0); }
+                else {
+                    totalSunHours = parseInt($("#Sun").val());
+                    var totalHours = totalMonHours + totalTueHours + totalWedHours + totalThurHours + totalFriHours + totalSatHours + totalSunHours;
+                    $("#Total").val(totalHours);
+                    $("#copyTotal").val(totalHours);
+                }
+            });
+        });
+    </script>
     }
     
