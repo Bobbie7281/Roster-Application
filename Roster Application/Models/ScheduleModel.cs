@@ -13,6 +13,7 @@ namespace Roster_Application.Models
         [DisplayName("Schedule Name:")]
         public string? ScheduleName { get; set; }
         [Required]
+        [RegularExpression("^[0-9]+$", ErrorMessage = "Only numeric characters are allowed.")]
         [DisplayName("Mon Hrs:")]
         public int ScheduleMonTotHours { get; set; }
         [Required]
@@ -33,6 +34,9 @@ namespace Roster_Application.Models
         [Required]
         [DisplayName("Sun Hrs:")]
         public int ScheduleSunTotHours { get; set; }
+        [Required]
+        [DisplayName ("Total Weekly Hours:")]
+        public int ScheduleTotalHours {  get; set; }
             
 
     }
