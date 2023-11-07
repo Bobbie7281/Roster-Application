@@ -13,5 +13,6 @@ namespace Roster_Application.Models.Models_Interface
         public int ScheduleFriTotHours { get; set; }
         public int ScheduleSatTotHours { get; set; }
         public int ScheduleSunTotHours { get; set; }
+        public int ScheduleTotalHours { get; set; }
     }
 }
