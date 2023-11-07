@@ -27,41 +27,46 @@
     @*</form>*@
          <div class="row">
            <label class="p-0" style="font-size:x-large" id="lbname">Edit Selected Schedule:</label>
-            <input type="text" value="" class="border p-3 form-control" name="name" id="scheduleName" disabled="disabled">
+            <input type="text" class="border p-3 form-control" name="name" id="scheduleName" disabled="disabled">
             </div>
         <div class="mb-0 row p-6">
             <label class="p-0" style="font-size:x-large" id="lbmon">Mon Hrs</label>
-            <input type="text" value="" class="border p-3 form-control" name="mon" id="monday" disabled="disabled">
+            <input class="border p-3 form-control" name="mon" id="monday" disabled="disabled">
             <span class="text-danger"></span>
         </div>
         <div class="mb-0 row p-6">
             <label class="p-0" style="font-size:x-large" id="lbtue">Tue Hrs</label>
-            <input type="text" value="" class="border p-3 form-control" name="tue" id="tuesday" disabled="disabled">
+            <input class="border p-3 form-control" name="tue" id="tuesday" disabled="disabled">
             <span class="text-danger"></span>
         </div>
         <div class="mb-0 row p-6">
             <label class="p-0" style="font-size:x-large" id="lbwed">Wed Hrs</label>
-            <input type="text" value="" class="border p-3 form-control" name="wed" id="wednesday" disabled="disabled">
+            <input type="text" class="border p-3 form-control" name="wed" id="wednesday" disabled="disabled">
             <span class="text-danger"></span>
         </div>
         <div class="mb-0 row p-6">
             <label class="p-0" style="font-size:x-large" id="lbthur">Thur Hrs</label>
-            <input type="text" value="" class="border p-3 form-control" name="thur" id="thursday" disabled="disabled">
+            <input type="text" class="border p-3 form-control" name="thur" id="thursday" disabled="disabled">
             <span class="text-danger"></span>
         </div>
         <div class="mb-0 row p-6">
             <label class="p-0" style="font-size:x-large" id="lbfri">Fri Hrs</label>
-            <input type="text" value="" class="border p-3 form-control" name="fri" id="friday" disabled="disabled">
+            <input type="text" class="border p-3 form-control" name="fri" id="friday" disabled="disabled">
             <span class="text-danger"></span>
         </div>
         <div class="mb-0 row p-6">
             <label class="p-0" style="font-size:x-large" id="lbsat">Sat Hrs</label>
-            <input type="text" value="" class="border p-3 form-control" name="sat" id="saturday" disabled="disabled">
+            <input type="text" class="border p-3 form-control" name="sat" id="saturday" disabled="disabled">
             <span class="text-danger"></span>
         </div>
         <div class="mb-0 row p-6">
             <label class="p-0" style="font-size:x-large" id="lbsun">Sun Hrs</label>
-            <input type="text" value="" class="border p-3 form-control" name="sun" id="sunday" disabled="disabled">
+            <input type="text" class="border p-3 form-control" name="sun" id="sunday" disabled="disabled">
+            <span class="text-danger"></span>
+        </div>
+        <div class="mb-0 row p-6">
+            <label class="p-0" style="font-size:x-large" id="lbtotalhrs">Total Weekly Hours</label>
+            <input type="text" class="border p-3 form-control" name="sun" id="totalHours" disabled="disabled">
             <span class="text-danger"></span>
         </div>
 
@@ -85,6 +90,7 @@
 @section Scripts{
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
     <script>
         
         $(document).ready(function () {
@@ -115,7 +121,8 @@
                         $("#thursday").val(data.scheduleThurTotHours);
                         $("#friday").val(data.scheduleFriTotHours);
                         $("#saturday").val(data.scheduleSatTotHours);
-                        $("#sunday").val(data.scheduleSunTotHours);       
+                        $("#sunday").val(data.scheduleSunTotHours);
+                        $("#totalHours").val(data.scheduleTotalHours);
                     },
                 });
             });
@@ -133,30 +140,39 @@
                 var fri = $("#friday").val();
                 var sat = $("#saturday").val();
                 var sun = $("#sunday").val();
+                var totalHours = $("#totalHours").val();
                 var message="The folowing errors where encountered:\n\n";
 
                 $.ajax({
                 url: "/Schedule/SCheckDataPriorSaving",
                 type:"POST",
-                    data: { selectedSchedule: selectedName, newSchName: name, monHrs: mon, tueHrs: tue, wedHrs: wed, thurHrs: thur, friHrs: fri, satHrs: sat, sunHrs: sun },
+                    data: { editingCurrentSchedule: true, selectedSchedule: selectedName, newSchName: name, monHrs: mon, tueHrs: tue, wedHrs: wed, thurHrs: thur, friHrs: fri, satHrs: sat, sunHrs: sun },
                 success: function(data) 
                 {
                     //update all the input fields with the returned data from the method SCheckDataPriorSaving
                     if (data[0] == "Orange") { $("#scheduleName").css("background-color", "orange"); message += "-Schedule Name, either exists or blank or not in the correct format.\n"; }
-                        if (data[1] == "Orange") { $("#monday").css("background-color", "orange"); message += "-Monday Hours are either blank or not in the correct format.\n"; }
-                        if (data[2] == "Orange") { $("#tuesday").css("background-color", "orange"); message += "-Tuesday Hours are either blank or not in the correct format.\n"; }
-                        if (data[3] == "Orange") { $("#wednesday").css("background-color", "orange"); message += "-Wednesday Hours are either blank or not in the correct format.\n"; }
-                        if (data[4] == "Orange") { $("#thursday").css("background-color", "orange"); message += "-Thursday Hours are either blank or not in the correct format.\n"; }
-                        if (data[5] == "Orange") { $("#friday").css("background-color", "orange"); message += "-Friday Hours are either blank or not in the correct format.\n"; }
-                        if (data[6] == "Orange") { $("#saturday").css("background-color", "orange"); message += "-Saturday Hours are either blank or not in the correct format.\n"; }
-                        if (data[7] == "Orange") { $("#sunday").css("background-color", "orange"); message += "-Sunday Hours are not in the correct format.\n"; }
+                    else { $("#scheduleName").css("background-color", "white"); }
+                    if (data[1] == "Orange") { $("#monday").css("background-color", "orange"); message += "-Monday Hours are either blank or not in the correct format.\n"; }
+                        else { $("#monday").css("background-color", "white"); }
+                    if (data[2] == "Orange") { $("#tuesday").css("background-color", "orange"); message += "-Tuesday Hours are either blank or not in the correct format.\n"; }
+                        else { $("#tuesday").css("background-color", "white"); }
+                    if (data[3] == "Orange") { $("#wednesday").css("background-color", "orange"); message += "-Wednesday Hours are either blank or not in the correct format.\n"; }
+                        else { $("#wednesday").css("background-color", "white"); }
+                    if (data[4] == "Orange") { $("#thursday").css("background-color", "orange"); message += "-Thursday Hours are either blank or not in the correct format.\n"; }
+                        else { $("#thursday").css("background-color", "white"); }
+                    if (data[5] == "Orange") { $("#friday").css("background-color", "orange"); message += "-Friday Hours are either blank or not in the correct format.\n"; }
+                        else { $("#friday").css("background-color", "white"); }
+                    if (data[6] == "Orange") { $("#saturday").css("background-color", "orange"); message += "-Saturday Hours are either blank or not in the correct format.\n"; }
+                        else { $("#saturday").css("background-color", "white"); }
+                    if (data[7] == "Orange") { $("#sunday").css("background-color", "orange"); message += "-Sunday Hours are not in the correct format.\n"; }
+                        else { $("#sunday").css("background-color", "white"); }
 
                     if(data[8]==0)//data at location 8 stores the amount of errors encountered while checking the data. If the amount is 0, execute the following code. 
                     {
                         $.ajax({
                             url: "/Schedule/EditSchedule",
                             type: "POST",
-                            data: { selectedSchedule: selectedName, newSchName: name, monHrs: mon, tueHrs: tue, wedHrs: wed, thurHrs: thur, friHrs: fri, satHrs: sat, sunHrs: sun },
+                            data: { selectedSchedule: selectedName, newSchName: name, monHrs: mon, tueHrs: tue, wedHrs: wed, thurHrs: thur, friHrs: fri, satHrs: sat, sunHrs: sun, totHours: totalHours },
                             success: function (response) {
                                 if(response.isValid)
                                 {
@@ -179,21 +195,90 @@
         });
     </script>
     <script>
+        $(document).ready(function(){
 
-        $(document).ready(function () {
-            $("#refresh").click(function () {
-                console.log("Testing");
+            $("#selectSchedule").on("change", function () {
+                var selectSchedule = $(this).find("option:selected").text();
                 $.ajax({
-                    url: "/Schedule/EditSchedule",
+                    url: "/Schedule/SGetData",
                     type: "POST",
-                    success: function () { 
-                        consol.log("Test");
-                        location.reload();
+                    data: { scheduleName: selectSchedule },
+                    success: function (data) {
+
+                        var totalMonHours = data.scheduleMonTotHours;
+                        var totalTueHours = data.scheduleTueTotHours;
+                        var totalWedHours = data.scheduleWedTotHours;
+                        var totalThurHours = data.scheduleThurTotHours;
+                        var totalFriHours = data.scheduleFriTotHours;
+                        var totalSatHours = data.scheduleSatTotHours;
+                        var totalSunHours = data.scheduleSunTotHours;
+
+                        $("#monday").on("change", function () {
+                            if ($("#monday").val() < 0) { $("#monday").val(0); }
+                            else {
+                                totalMonHours = parseInt($("#monday").val());
+                                var totalHrs = totalMonHours + totalTueHours + totalWedHours + totalThurHours + totalFriHours + totalSatHours + totalSunHours;
+                                $("#totalHours").val(totalHrs);
+                                $("#copyTotal").val(totalHrs);
+                            }
+                        });
+                        $("#tuesday").on("change", function () {
+                            if ($("#tuesday").val() < 0) { $("#tuesday").val(0); }
+                            else {
+                                totalTueHours = parseInt($("#tuesday").val());
+                                var totalHrs = totalMonHours + totalTueHours + totalWedHours + totalThurHours + totalFriHours + totalSatHours + totalSunHours;
+                                $("#totalHours").val(totalHrs);
+                                $("#copyTotal").val(totalHrs);
+                            }
+                        });
+                        $("#wednesday").on("change", function () {
+                            if ($("#wednesday").val() < 0) { $("#wednesday").val(0); }
+                            else {
+                                totalWedHours = parseInt($("#wednesday").val());
+                                var totalHrs = totalMonHours + totalTueHours + totalWedHours + totalThurHours + totalFriHours + totalSatHours + totalSunHours;
+                                $("#totalHours").val(totalHrs);
+                                $("#copyTotal").val(totalHrs);
+                            }
+                        });
+                        $("#thursday").on("change", function () {
+                            if ($("#thursday").val() < 0) { $("#thursday").val(0); }
+                            else {
+                                totalThurHours = parseInt($("#thursday").val());
+                                var totalHrs = totalMonHours + totalTueHours + totalWedHours + totalThurHours + totalFriHours + totalSatHours + totalSunHours;
+                                $("#totalHours").val(totalHrs);
+                                $("#copyTotal").val(totalHrs);
+                            }
+                        });
+                        $("#friday").on("change", function () {
+                            if ($("#friday").val() < 0) { $("#friday").val(0); }
+                            else {
+                                totalFriHours = parseInt($("#friday").val());
+                                var totalHrs = totalMonHours + totalTueHours + totalWedHours + totalThurHours + totalFriHours + totalSatHours + totalSunHours;
+                                $("#totalHours").val(totalHrs);
+                                $("#copyTotal").val(totalHrs);
+                            }
+                        });
+                        $("#saturday").on("change", function () {
+                            if ($("#saturday").val() < 0) { $("#saturday").val(0); }
+                            else {
+                                totalSatHours = parseInt($("#saturday").val());
+                                var totalHrs = totalMonHours + totalTueHours + totalWedHours + totalThurHours + totalFriHours + totalSatHours + totalSunHours;
+                                $("#totalHours").val(totalHrs);
+                                $("#copyTotal").val(totalHrs);
+                            }
+                        });
+                        $("#sunday").on("change", function () {
+                            if ($("#sunday").val() < 0) { $("#sunday").val(0); }
+                            else {
+                                totalSunHours = parseInt($("#sunday").val());
+                                var totalHrs = totalMonHours + totalTueHours + totalWedHours + totalThurHours + totalFriHours + totalSatHours + totalSunHours;
+                                $("#totalHours").val(totalHrs);
+                                $("#copyTotal").val(totalHrs);
+                            }
+                        });
                     }
                 });
             });
         });
-
     </script>
-    
     }
