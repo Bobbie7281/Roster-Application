@@ -9,55 +9,60 @@
     <label asp-for="@Model.ClientName" class="mb-0 row p-6" style="font-size:x-large" id="clientName"></label>
     <div class="mb-1 pt-2 d-flex">
 
-        <input class="border-1 col-sm-8 mb-0 row p-6" name="clientName" id="myInput" style="font-size:x-large">
+        <input class="border-1 col-sm-8 mb-0 row p-6" name="clientName" id="newClientName" style="font-size:x-large">
         <button class="btn btn-primary btn-lg p1" id="btn">Create</button>
     </div>
 </div>
 
 <div>
-    <form method="post" action="/Client/ClientOptions">
         <div class="form-group row p-1" style="font-size:x-large">
             <div class="mb-0 row p-6">
                 <label asp-for="@Model.ClientName" class="p-0" style="font-size:x-large" id="confirmedName" hidden="hidden"></label>
-                <input asp-for="@Model.ClientName" class="mb-1 pt-4" style="font-size:large" id="destinationInput" hidden="hidden">
-                <span asp-validation-for="@Model.ClientName" class="text-danger"></span>
+                <input class="mb-1 pt-4" style="font-size:large" id="copyNewClientName" hidden="hidden">
             </div>
             <div class="mb-0 row p-2">
                 <label asp-for="@Model.ClientAddress" class="p-0" style="font-size:x-large"></label>
-                <input asp-for="@Model.ClientAddress" class="mb-1 pt-4" style="font-size:large" id="Address" disabled="disabled">
-                <span asp-validation-for="@Model.ClientAddress" class="text-danger"></span>
+                <input class="mb-1 pt-4" style="font-size:large" id="Address" disabled="disabled">
             </div>
             <div class="mb-0 row p-2">
                 <label asp-for="@Model.ClientContactDetails" class="p-0" style="font-size:x-large"></label>
-                <input asp-for="@Model.ClientContactDetails" class="mb-1 pt-4" style="font-size:large" id="Contact" disabled="disabled">
-                <span asp-validation-for="@Model.ClientContactDetails" class="text-danger"></span>
+                <input class="mb-1 pt-4" style="font-size:large" id="Contact" disabled="disabled">
             </div>
             <div class="mb-0 row p-2">
                 <label asp-for="@Model.ScheduleID" class="p-0" style="font-size:x-large"></label>
                 <select class="mb-1 pt-4" style="font-size:large" name="editSchedule" id="scheduleOptions" disabled="disabled">
                     <option value="" disabled selected >Select a schedule</option> @*This will serve as a placeholder in the dropdown list*@
-                    <span asp-validation-for="@Model.ScheduleID" class="text-danger"></span>
                 </select>
             </div>
             <div class="mb-0 row p-2">
                 <label asp-for="@Model.CategoryID" class="p-0" style="font-size:x-large"></label>
                 <select class="mb-1 pt-4" style="font-size:large" name="editSchedule" id="categoryOptions" disabled="disabled">
                     <option value="" disabled selected>Select a category</option> @*This will serve as a placeholder in the dropdown list*@
-                    <span asp-validation-for="@Model.CategoryID" class="text-danger"></span>
                 </select>
             </div>
             <div class="mb-0 row p-2">
                 <label asp-for="@Model.TotalHours" class="p-0" style="font-size:x-large"></label>
-                <input asp-for="@Model.TotalHours" class="mb-1 pt-4" style="font-size:large" id="TotalHours" disabled="disabled">
-                <span asp-validation-for="@Model.TotalHours" class="text-danger"></span>
+                <input class="mb-1 pt-4" style="font-size:large" id="TotalHours" disabled="disabled">
             </div>
+        <div class="mb-0 row p-2">
+            <input class="mb-1 pt-4" style="font-size:large" id="copyTotalHours" hidden="hidden">
+        </div>
             
         </div>
-        <div class="mb-0 pt-5">
-            <button class="btn btn-primary btn-lg" type="submit" id="Save" disabled="disabled">Save</button>
-            <button type="submit" asp-controller="Client" asp-action="ClientOptions" class="btn btn-primary btn-lg">Back</button>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-1 p-3">
+                <button class="btn btn-primary btn-lg" id="Save" disabled="disabled">Save</button>
+            </div>
+
+            <div class="col-md-1 p-3">
+                <form method="post" action="/Client/ClientOptions">
+                    <button type="submit" class="btn btn-lg btn-primary" id="back">Back</button>
+                </form>
+            </div>
         </div>
-    </form>
+    </div>
+
 </div>
 
 @section Scripts{
@@ -69,7 +74,7 @@
     <script>
         $(document).ready(function () {
             $("#btn").click(function () { //When the button with id "btn" is clicked, the following with execute.
-                var inputValue = $("#myInput").val();//takes the value of the input field with the id "myInput and saves it into the variable inputValue"
+                var inputValue = $("#newClientName").val();//takes the value of the input field with the id "newClientName and saves it into the variable inputValue"
 
                 $.ajax({
                     type: "POST",
@@ -82,13 +87,12 @@
                             alert("Client Name Successfull");
 
                             $("#btn").hide();
-                            document.getElementById("myInput").setAttribute("disabled", "disabled");//disable the input field
+                            document.getElementById("newClientName").setAttribute("disabled", "disabled");//disable the input field
                             document.getElementById("btn").setAttribute("disabled", "disabled"); //disable the create button
                             document.getElementById("Address").removeAttribute("disabled"); //Enable all the inputs from Mon - Sun
                             document.getElementById("Contact").removeAttribute("disabled");
                             document.getElementById("scheduleOptions").removeAttribute("disabled");
                             document.getElementById("categoryOptions").removeAttribute("disabled");
-                            document.getElementById("TotalHours").removeAttribute("disabled");
                             document.getElementById("Save").removeAttribute("disabled");
 
                             $.ajax({
@@ -130,14 +134,91 @@
 
     <script>
         $(document).ready(function () {
-            var $sourceInput = $("#myInput");
-            var $destinationInput = $("#destinationInput");
+            $("#Save").click(function () {
+                var selectedName = $("#selectClient").val();
+                var name = $("#copyNewClientName").val();
+                var clientAddress = $("#Address").val();
+                var contact = $("#Contact").val();
+                var scheduleName = $("#scheduleOptions").val();
+                var categoryName = $("#categoryOptions").val();
+                var totHours = $("#TotalHours").val();
+                var message = "The folowing errors where encountered:\n\n";
+
+                $.ajax({
+                    url: "/Client/SCheckDataPriorSaving",
+                    type: "POST",
+                    data: { editingCurrentClient: false, selectedSchedule: selectedName, clientName: name, address: clientAddress, contactNum: contact, schedule: scheduleName, category: categoryName, totalHours: totHours },
+                    success: function (data) {
+                        //update all the input fields with the returned data from the method SCheckDataPriorSaving
+                        if (data[0] == "Orange") { $("#newClientName").css("background-color", "orange"); message += "-Client Name, either exists or blank or not in the correct format.\n"; }
+                        else { $("#newClientName").css("background-color", "white"); }
+
+                        if (data[1] == "Orange") { $("#Address").css("background-color", "orange"); message += "-Client Address is blank.\n"; }
+                        else { $("#Address").css("background-color", "white"); }
+
+                        if (data[2] == "Orange") { $("#Contact").css("background-color", "orange"); message += "-Client Contact is Blank.\n"; }
+                        else { $("#Contact").css("background-color", "white"); }
+
+                        if (data[3] == "Orange") { $("#scheduleOptions").css("background-color", "orange"); message += "-Schedule not selected\n"; }
+                        else { $("#scheduleOptions").css("background-color", "white"); }
+
+                        if (data[4] == "Orange") { $("#categoryOptions").css("background-color", "orange"); message += "-Category not selected.\n"; }
+                        else { $("#categoryOptions").css("background-color", "white"); }
+
+                        if (data[5] == 0)//data at location 8 stores the amount of errors encountered while checking the data. If the amount is 0, execute the following code.
+                        {
+                            $.ajax({
+                                url: "/Client/SCreateNewClient",
+                                type: "POST",
+                                data: { clientName: name, address: clientAddress, contactNum: contact, schedule: scheduleName, category: categoryName, totalHours: totHours },
+                                success: function (response) {
+                                    if (response.isValid) {
+                                        //alert("Save Successfully");
+                                        //if (confirm) //after pressing the ok button of the message, the page will refresh
+                                        //{
+                                        location.reload();
+                                        //}
+                                    }
+                                }
+                            });
+                        }
+                        else {
+                            alert(message += "\n Saving not possible. Correct all errors in order to save.");
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            var $sourceInput = $("#newClientName");
+            var $destinationInput = $("#copyNewClientName");
 
             $sourceInput.on("input", function () {
                 $destinationInput.val($sourceInput.val());
             })
         })
 
+    </script>
+    
+    <script>
+        $(document).ready(function () {
+            $("#scheduleOptions").on("change", function () {
+                var selectSchedule = $(this).find("option:selected").text();
+
+                $.ajax({
+                    url: "/Client/SGetTotalHours",
+                    type: "POST",
+                    data: { scheduleName: selectSchedule },
+                    success: function (data) {
+                        $("#TotalHours").val(data);
+                        $("#copyTotalHours").val(data);
+                    }
+                });
+            });
+        });
     </script>
 
     }
