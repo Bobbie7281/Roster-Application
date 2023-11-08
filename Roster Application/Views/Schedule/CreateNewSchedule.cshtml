@@ -114,7 +114,8 @@
                         else 
                         {
                             //if response is false execute the following.
-                            alert("Schedule Name \"" + inputValue + "\" is not valid either because it already exists in the database or the name contained whitespaces. Please choose another name.");
+                            alert("Schedule Name \"" + inputValue + "\" is not valid due to one of the following:\n\n1.) Name already exists in the database.\n2.) " +
+                                "The name contains whitespaces.\n3.) The name field is blank.\n\nPlease type the name correctly without the above errors.");
                         }
                     }
                 });
