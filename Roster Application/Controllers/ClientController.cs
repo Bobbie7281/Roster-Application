@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Roster_Application.Data;
 using Roster_Application.Models.Models_Interface;
+using System.Text.RegularExpressions;
 
 namespace Roster_Application.Controllers
 {
@@ -44,20 +45,35 @@ namespace Roster_Application.Controllers
         {
             return View();
         }
-        public IActionResult SCheckCheckClientName(string input)
+        [HttpPost]
+        public IActionResult SCheckClientName(string inputValue)
         {
-            bool isValid = false;
+            bool isValid;
+            string checkForWhitespace = @"\s";
 
-            var checkClientName = _db.Clients.FirstOrDefault(x => x.ClientName == input);
+            bool whitespaceDedected = false;
 
-            if (checkClientName == null)
+            var checkClientName = _db.Clients.FirstOrDefault(x => x.ClientName == inputValue);//checks if the value of inputValue exists in the database and returns the name if it exists.
+
+
+            if (checkClientName == null && inputValue != null)// && !whitespaceDedected)//If name does not exist in DB & name is not null & no whitespaces dedected
             {
-                isValid = true;
+                whitespaceDedected = Regex.IsMatch(inputValue, checkForWhitespace);
+                if (!whitespaceDedected ) 
+                {
+                    isValid = true;
+                    _clientModel!.ClientName = inputValue;
+                }
+                else
+                {
+                    isValid = false;
+                }
             }
             else
             {
                 isValid = false;
             }
+
             return Json(new { isValid });
         }
         [HttpGet]
@@ -89,6 +105,16 @@ namespace Roster_Application.Controllers
                 }
             }
             return Json(categoryNames);
+        }
+        public IActionResult SCheckDataPriorSaving(string clientName, string address, string contactNum, string schedule, string category, int totalHours)
+        {
+            //check is address field conatins data
+            //check if contact number contains only numbers.
+            //check is a schedule was selected.
+            //check if s category was selected.
+            //upon schedule selection, total hours field should contain the total hours in the selected schedule.
+
+            throw new NotImplementedException();
         }
 
 

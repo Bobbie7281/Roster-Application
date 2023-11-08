@@ -15,7 +15,7 @@
 </div>
 
 <div>
-    <form method="post" action="/Schedule/Create Schedule">
+    <form method="post" action="/Client/ClientOptions">
         <div class="form-group row p-1" style="font-size:x-large">
             <div class="mb-0 row p-6">
                 <label asp-for="@Model.ClientName" class="p-0" style="font-size:x-large" id="confirmedName" hidden="hidden"></label>
@@ -54,7 +54,7 @@
             
         </div>
         <div class="mb-0 pt-5">
-            <button class="btn btn-primary btn-lg" type="submit" id="save" disabled="disabled">Save</button>
+            <button class="btn btn-primary btn-lg" type="submit" id="Save" disabled="disabled">Save</button>
             <button type="submit" asp-controller="Client" asp-action="ClientOptions" class="btn btn-primary btn-lg">Back</button>
         </div>
     </form>
@@ -73,7 +73,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/Client/SCheckCheckClientName", //Schedule is the controller name and CheckScheduleName is the method inside the controller
+                    url: "/Client/SCheckClientName", //Schedule is the controller name and CheckScheduleName is the method inside the controller
                     data: { inputValue: inputValue },//The data passed to the CheckScheduleName method.
                     success: function (response) {
                         if (response.isValid) //checks if the Json returned value from the method is true or false.
@@ -89,6 +89,7 @@
                             document.getElementById("scheduleOptions").removeAttribute("disabled");
                             document.getElementById("categoryOptions").removeAttribute("disabled");
                             document.getElementById("TotalHours").removeAttribute("disabled");
+                            document.getElementById("Save").removeAttribute("disabled");
 
                             $.ajax({
                                 type:"GET",
@@ -117,7 +118,8 @@
                         }
                         else {
                             //if response is false execute the following.
-                            alert("Client Name \"" + inputValue + "\" is not valid either because it already exists in the database or the name contained whitespaces. Please choose another name.");
+                            alert("Client Name \"" + inputValue + "\" is not valid due to one of the following:\n\n1.) Name already exists in the database.\n2.) "+ 
+                            "The name contains whitespaces.\n3.) The name field is blank.\n\nPlease type the name correctly without the above errors.");
                         }
                     }
                 });

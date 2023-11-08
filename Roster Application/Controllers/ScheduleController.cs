@@ -88,15 +88,23 @@ namespace Roster_Application.Controllers
             bool isValid;
             string checkForWhitespace = @"\s";
 
-            bool whitespaceDedected = Regex.IsMatch(inputValue, checkForWhitespace);
+            bool whitespaceDedected = false;
 
-            var checkScheduleName = _db.Schedules.FirstOrDefault(x => x.ScheduleName == inputValue);//checks if the value of inputValue exists in the database and returns the name if it exists.
+            var checkClientName = _db.Schedules.FirstOrDefault(x => x.ScheduleName == inputValue);//checks if the value of inputValue exists in the database and returns the name if it exists.
 
 
-            if (checkScheduleName == null && inputValue != null && !whitespaceDedected)
+            if (checkClientName == null && inputValue != null)// && !whitespaceDedected)//If name does not exist in DB & name is not null & no whitespaces dedected
             {
-                isValid = true;
-                _scheduleModel!.ScheduleName = inputValue;
+                whitespaceDedected = Regex.IsMatch(inputValue, checkForWhitespace);
+                if (!whitespaceDedected)
+                {
+                    isValid = true;
+                    _scheduleModel!.ScheduleName = inputValue;
+                }
+                else
+                {
+                    isValid = false;
+                }
             }
             else
             {
