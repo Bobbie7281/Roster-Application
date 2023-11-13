@@ -12,13 +12,16 @@ namespace Roster_Application.Controllers
         IClientModel? _clientModel;
         IEmployeeModel? _employeeModel;
         IScheduleModel? _scheduleModel;
-        public ClientController(ApplicationDbContext db, ICategoryModel categoryModel, IClientModel clientModel, IEmployeeModel employeeModel, IScheduleModel scheduleModel)
+        IListsModel? _listsModel;
+        public ClientController(ApplicationDbContext db, ICategoryModel categoryModel, IClientModel clientModel,
+            IEmployeeModel employeeModel, IScheduleModel scheduleModel, IListsModel? listsModel)
         {
             _db = db;
             _clientModel = clientModel;
             _employeeModel = employeeModel;
             _scheduleModel = scheduleModel;
             _categoryModel = categoryModel;
+            _listsModel = listsModel;
         }
 
         public IActionResult ClientOptions()
@@ -43,7 +46,11 @@ namespace Roster_Application.Controllers
 
         public IActionResult EditExistingClient()
         {
-            return View();
+            _listsModel!.ClientList = _db.Clients.ToList();
+            _listsModel!.ScheduleList = _db.Schedules.ToList();
+            _listsModel!.CategoryList = _db.Categories.ToList();
+
+            return View(_listsModel);
         }
         [HttpPost]
         public IActionResult SCheckClientName(string inputValue)
@@ -108,7 +115,7 @@ namespace Roster_Application.Controllers
         }
         public IActionResult SCheckDataPriorSaving(bool editingCurrentClient, string selectedName, string clientName, string address, string contactNum, string schedule, string category, int totalHours)
         {
-            
+
             var obj = _db.Clients.FirstOrDefault(x => x.ClientName == clientName);//Check if the new Client name already exists in the database.
 
             string checkForWhitespace = @"\s"; //Regex expression which checks for a whitespace in a string,
@@ -187,7 +194,7 @@ namespace Roster_Application.Controllers
         {
             bool isValid = false;
             var scheduleObj = _db.Schedules.FirstOrDefault(x => x.ScheduleName == schedule);
-            var categoryObj = _db.Categories.FirstOrDefault(x => x.CategoryName ==  category);
+            var categoryObj = _db.Categories.FirstOrDefault(x => x.CategoryName == category);
 
             _clientModel!.ClientName = clientName;
             _clientModel.ClientAddress = address;
@@ -203,6 +210,41 @@ namespace Roster_Application.Controllers
 
             return Json(new { isValid });
         }
+        [HttpPost]
+        public IActionResult SGetData(string clientName)
+        {
+            var info = _db.Clients.FirstOrDefault(x => x.ClientName == clientName);
+            var scheduleObj = _db.Schedules.FirstOrDefault(predicate: x => x.ScheduleId == info!.ScheduleID);
+            var categoryObj = _db.Categories.FirstOrDefault(predicate: x => x.CategoryId == info!.CategoryID);
 
+            List<string> clientInfo = new();
+
+            if (info != null)
+            {
+                if (info.ClientName != null)
+                {
+                    clientInfo.Add(info.ClientName);
+                }
+                if (info.ClientAddress != null)
+                {
+                    clientInfo.Add(info.ClientAddress);
+                }
+                if (info.ClientContactDetails != null)
+                {
+                    clientInfo.Add(info.ClientContactDetails);
+                }
+                if (info.ScheduleID != 0)
+                {
+                    clientInfo.Add(scheduleObj.ScheduleName);
+                }
+                if (info.CategoryID != 0)
+                {
+                    clientInfo.Add(categoryObj.CategoryName);
+                }
+                clientInfo.Add(info.TotalHours.ToString());
+            }
+
+            return Json(clientInfo);
+        }
     }
 }

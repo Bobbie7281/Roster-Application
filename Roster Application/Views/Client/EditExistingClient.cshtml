@@ -1,1 +1,149 @@
-﻿<h1>Edit Existing Client</h1>
+﻿@model ListsModel
+
+<div id="viewContainer">
+
+    <div class="text-primary p-3">
+
+        <h1 class="display-4 text-center">Edit Client Data:</h1>
+        <partial name="_Notifications" />
+
+        <div class="mb-3 row p-3">
+            <label class="p-0" style="font-size:x-large">Choose a Client to Edit:</label>
+            <div class="row mb-0 p-3">
+                <select class="form-select p-3" name="editClient" id="selectClient">
+                    <option value="" disabled selected>Choose a client</option> @*This will serve as a placeholder in the dropdown list*@
+
+                    @foreach (var item in @Model.ClientList)
+                    {
+                        if (item.ClientName != "")
+                        {
+                            <option>@item.ClientName</option>
+                        }
+                    }
+
+                </select>
+            </div>
+        </div>
+
+            <div class="mb-0 row p-6">
+                <label class="p-0" style="font-size:x-large">Client Name:</label>
+                <input class="mb-1 pt-4" style="font-size:large" id="NewClientName" disabled="disabled">
+            </div>
+            <div class="mb-0 row p-2">
+                <label class="p-0" style="font-size:x-large">Address:</label>
+                <input class="mb-1 pt-4" style="font-size:large" id="Address" disabled="disabled">
+            </div>
+            <div class="mb-0 row p-2">
+                <label class="p-0" style="font-size:x-large">Contact Details:</label>
+                <input class="mb-1 pt-4" style="font-size:large" id="Contact" disabled="disabled">
+            </div>
+            <div class="mb-0 row p-2">
+                <label class="p-0" style="font-size:x-large">Schedule:</label>
+            <select class="mb-1 pt-4" style="font-size:large" name="schedule" id="selectSchedule" disabled="disabled">
+                <option value="" disabled selected>Choose a schedule</option> @*This will serve as a placeholder in the dropdown list*@
+
+                @foreach (var item in @Model.ScheduleList)
+                {
+                    if (item.ScheduleName != "")
+                    {
+                        <option>@item.ScheduleName</option>
+                    }
+                }
+            </select>
+            </div>
+            <div class="mb-0 row p-2">
+                <label class="p-0" style="font-size:x-large">Category:</label>
+            <select class="mb-1 pt-4" style="font-size:large" name="category" id="selectCatgory" disabled="disabled">
+                <option value="" disabled selected>Choose a Category</option> @*This will serve as a placeholder in the dropdown list*@
+
+                @foreach (var item in @Model.CategoryList)
+                {
+                    if (item.CategoryName != "")
+                    {
+                        <option>@item.CategoryName</option>
+                    }
+                }
+
+            </select>
+            </div>
+            <div class="mb-0 row p-2">
+                <label class="p-0" style="font-size:x-large">Total Hours:</label>
+                <input class="mb-1 pt-4" style="font-size:large" id="TotalHours" disabled="disabled">
+            </div>
+            <div class="mb-0 row p-2">
+                <input class="mb-1 pt-4" style="font-size:large" id="copyTotalHours" hidden="hidden">
+            </div>
+
+            </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-1 p-3">
+                    <button class="btn btn-primary btn-lg" id="save" disabled="disabled">Save</button>
+                </div>
+
+                <div class="col-md-1 p-3">
+                    <form method="post" action="/Client/ClientOptions">
+                        <button type="submit" class="btn btn-lg btn-primary" id="back">Back</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@section Scripts{
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $("#selectClient").on("change", function () {
+                var selectClient = $(this).find("option:selected").text();
+                $.ajax({
+                    url:"/Client/SGetData",
+                    type:"POST",
+                    data: { clientName: selectClient },
+                    success: function (data) {
+                        document.getElementById("selectClient").setAttribute("disabled", "disabled");
+                        document.getElementById("NewClientName").removeAttribute("disabled");
+                        document.getElementById("Address").removeAttribute("disabled");
+                        document.getElementById("Contact").removeAttribute("disabled");
+                        document.getElementById("selectSchedule").removeAttribute("disabled");
+                        document.getElementById("selectCatgory").removeAttribute("disabled");
+                        document.getElementById("save").removeAttribute("disabled");
+
+                        $("#NewClientName").val(data[0]);
+                        $("#Address").val(data[1]);
+                        $("#Contact").val(data[2]);
+                        $("#selectSchedule").val(data[3]);
+                        $("#selectCatgory").val(data[4]);
+                        $("#TotalHours").val(data[5]);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Ajax Error: " + status + " - " + error);
+                        console.log(xhr.responseText);
+                    }
+                });
+            });
+        });
+        
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#selectSchedule").on("change", function () {
+                var selectedschedule = $(this).find("option:selected").text();
+
+                $.ajax({
+                    url: "/Client/SGetTotalHours",
+                    type: "POST",
+                    data: { scheduleName: selectedschedule },
+                    success: function (data) {
+                        $("#TotalHours").val(data);
+                    },
+                });
+            });
+        });
+
+    </script>
+    }

@@ -102,6 +102,7 @@
                     type: "POST",
                     data: { scheduleName: selectSchedule },
                     success: function (data) {
+                        console.log("Test");
 
                         document.getElementById("selectSchedule").setAttribute("disabled", "disabled");
                         document.getElementById("scheduleName").removeAttribute("disabled");
@@ -204,7 +205,6 @@
                     type: "POST",
                     data: { scheduleName: selectSchedule },
                     success: function (data) {
-
                         var totalMonHours = data.scheduleMonTotHours;
                         var totalTueHours = data.scheduleTueTotHours;
                         var totalWedHours = data.scheduleWedTotHours;
@@ -212,7 +212,7 @@
                         var totalFriHours = data.scheduleFriTotHours;
                         var totalSatHours = data.scheduleSatTotHours;
                         var totalSunHours = data.scheduleSunTotHours;
-
+                        console.log("Test");
                         $("#monday").on("change", function () {
                             if ($("#monday").val() < 0) { $("#monday").val(0); }
                             else {
