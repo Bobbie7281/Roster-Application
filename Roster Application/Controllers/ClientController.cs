@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient.DataClassification;
 using Roster_Application.Data;
 using Roster_Application.Models.Models_Interface;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace Roster_Application.Controllers
@@ -52,6 +54,30 @@ namespace Roster_Application.Controllers
 
             return View(_listsModel);
         }
+        [HttpPost]
+        public IActionResult SEditClient(string selectedName, string newClientName, string address, string contact, string schedule, string category, string totalHours)
+        {
+            bool isValid = false;
+            var scheduleObj = _db.Schedules.FirstOrDefault(x => x.ScheduleName == schedule);
+            var categoryObj = _db.Categories.FirstOrDefault(x => x.CategoryName == category);
+            
+            var clientToEdit = _db.Clients.FirstOrDefault(x => x.ClientName == selectedName);
+
+            clientToEdit!.ClientName = newClientName;
+            clientToEdit.ClientAddress = address;
+            clientToEdit.ClientContactDetails= contact;
+            clientToEdit.ScheduleID = scheduleObj!.ScheduleId;
+            clientToEdit.CategoryID = categoryObj!.CategoryId;
+            clientToEdit.TotalHours = int.Parse(totalHours);
+
+            _db.Clients.Update(clientToEdit);
+            _db.SaveChanges();
+            TempData["Successful"] = "Data Saved Successsfully!";
+            isValid = true;
+
+            return Json(new { isValid });
+        }
+
         [HttpPost]
         public IActionResult SCheckClientName(string inputValue)
         {
@@ -140,7 +166,6 @@ namespace Roster_Application.Controllers
                     whitespaceDetected = Regex.IsMatch(clientName, checkForWhitespace);
                 }
 
-
                 if (whitespaceDetected)
                 {
                     errors++;
@@ -158,6 +183,18 @@ namespace Roster_Application.Controllers
                 else if (!whitespaceDetected && obj == null && clientName != null)
                 {
                     errorsList.Add(noError);
+                }
+                foreach (string item in FieldData)
+                {
+                    if (item == null)
+                    {
+                        errors++;
+                        errorsList.Add(error);
+                    }
+                    else
+                    {
+                        errorsList.Add(noError);
+                    }
                 }
             }
             else
@@ -178,8 +215,6 @@ namespace Roster_Application.Controllers
                 }
 
             }
-
-
             errorsList.Add(errors.ToString());
             return Json(errorsList);
         }
