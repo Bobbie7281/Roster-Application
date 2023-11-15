@@ -31,7 +31,8 @@ namespace Roster_Application.Controllers
             return View(_scheduleModel);
         }
         [HttpPost]
-        public IActionResult SCreateNewSchedule(string newSchName, string monHrs, string tueHrs, string wedHrs, string thurHrs, string friHrs, string satHrs, string sunHrs, string totHours)
+        public IActionResult SCreateNewSchedule(string newSchName, string monHrs, string tueHrs, string wedHrs, string thurHrs, string friHrs,
+            string satHrs, string sunHrs, string totHours)
         {
             bool isValid = false;
 
@@ -59,23 +60,38 @@ namespace Roster_Application.Controllers
             var data = _db.Schedules.ToList();
             return View(data);
         }
-        public IActionResult EditSchedule(string selectedSchedule, string newSchName, string monHrs, string tueHrs, string wedHrs, string thurHrs, string friHrs, string satHrs, string sunHrs, string totHours)
+        public IActionResult EditSchedule(string selectedSchedule, string newSchName, string monHrs, string tueHrs, string wedHrs, string thurHrs,
+            string friHrs, string satHrs, string sunHrs, string totHours)
         {
-            var obj = _db.Schedules.FirstOrDefault(x => x.ScheduleName == selectedSchedule);
+            var schedule = _db.Schedules.FirstOrDefault(x => x.ScheduleName == selectedSchedule); //Get the object according to the name of the schedule passed to the method
+            var clients = _db.Clients.ToList(); //Get the list of all the clients
             bool isValid = false;
 
-            obj!.ScheduleName = newSchName;
-            obj.ScheduleMonTotHours = int.Parse(monHrs);
-            obj.ScheduleTueTotHours = int.Parse(tueHrs);
-            obj.ScheduleWedTotHours = int.Parse(wedHrs);
-            obj.ScheduleThurTotHours = int.Parse(thurHrs);
-            obj.ScheduleFriTotHours = int.Parse(friHrs);
-            obj.ScheduleSatTotHours = int.Parse(satHrs);
-            obj.ScheduleSunTotHours = int.Parse(sunHrs);
-            obj.ScheduleTotalHours = int.Parse(totHours);
 
-            _db.Schedules.Update(obj);
-            _db.SaveChanges();
+            foreach (var client in clients) //Loop through all the clients 
+            {
+                if (client.ScheduleID == schedule!.ScheduleId) //check if the schedule id of the client matches to the schedule id of the schedule which is being edited 
+                {
+                    client.TotalHours = int.Parse(totHours);//if it matches get the new total hours passed as a parameter and save it in the total hours of the client with the same schedule.
+                    _db.Clients.Update(client); //update the database
+                    _db.SaveChanges(); //save the changes 
+
+                }
+            }
+
+            //update the schedule with the data passed as parameters 
+            schedule!.ScheduleName = newSchName;
+            schedule.ScheduleMonTotHours = int.Parse(monHrs);
+            schedule.ScheduleTueTotHours = int.Parse(tueHrs);
+            schedule.ScheduleWedTotHours = int.Parse(wedHrs);
+            schedule.ScheduleThurTotHours = int.Parse(thurHrs);
+            schedule.ScheduleFriTotHours = int.Parse(friHrs);
+            schedule.ScheduleSatTotHours = int.Parse(satHrs);
+            schedule.ScheduleSunTotHours = int.Parse(sunHrs);
+            schedule.ScheduleTotalHours = int.Parse(totHours);
+
+            _db.Schedules.Update(schedule);//update the database
+            _db.SaveChanges();//save the changes
 
             TempData["Successful"] = "Data Saved Successsfully!";
             isValid = true;
