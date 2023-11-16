@@ -1,5 +1,7 @@
 ﻿using Roster_Application.Models.Models_Interface;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Roster_Application.Models
 {
@@ -8,14 +10,28 @@ namespace Roster_Application.Models
         [Key]
         public int EmployeeId { get; set; }
         [Required]
+        [DisplayName ("Employee Name:")]
         public string ?EmployeeName { get; set; }
         [Required]
+        [DisplayName ("Surname:")]
+        public string ?EmployeeSurname {  get; set; }    
+        [Required]
+        [DisplayName("Employee Address:")]
+
         public int EmployeeAddress { get; set; }
         [Required]
+        [DisplayName("Employee Contact Number:")]
+
         public int EmployeeContactNumber { get; set; }
         [Required]
+        [DisplayName("Employee Email Address:")]
+
         public int EmployeeEmail { get; set; }
+
         [Required]
-        public int EmployeeCategory { get; set; }
+        [ForeignKey ("CategoryId")]
+        [DisplayName ("Category")]
+        public int CategoryID { get; set; }
+        public CategoryModel ?CategoryId { get; set; }
     }
 }
