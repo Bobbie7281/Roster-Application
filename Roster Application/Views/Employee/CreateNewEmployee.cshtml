@@ -73,14 +73,50 @@
                 var contactNumber = $("#EmployeeContactNumber").val();
                 var emailAddress = $("#EmployeeEmail").val();
                 var category = $("#SelectCategory").val();
-                
-                console.log("Test");
+
+                var message = "The folowing errors where encountered:\n\n";
+                var employeeData = [name, surname, address, contactNumber, emailAddress, category];
+                var ids = [$("#EmployeeName"), $("#EmployeeSurname"), $("#EmployeeAddress"), $("#EmployeeContactNumber"), $("#EmployeeEmail"), $("#SelectCategory")];
+                var elementsNames = ["Name", "Surname", "Address", "Contact Number", "Email Address", "Category"];
+
                 $.ajax({
                     url: "/Employee/SCheckDataPriorSaving",
                     type: "POST",
-                    data: { ename:name, esurname:surname, eaddress:address, econtact:contactNumber, eemailAddress:emailAddress, ecategory:category },
+                    data: { empData: employeeData },
                     success: function (data) {
-                        alert("You reached this point");
+                        if(data[6]!="0")
+                        {
+                            data.pop();//Remove the last element from data, as it shouldn't be included in the for each loop below.
+                            $.each(data, function (index, element) {
+                                if (element != "Green") {
+
+                                    ids[index].css("background-color", "Orange");
+                                    message += elementsNames[index] + " is blank.\n";
+                                }
+                                else
+                                {
+                                    ids[index].css("background-color", "White");
+                                }
+                                if (index + 1 == data.length) 
+                                {
+                                    alert(message += "\n Saving not possible. Correct all errors in order to save.");
+                                }
+
+                            });
+                        }
+                        else
+                        {
+                            $.ajax({
+                                url: "/Employee/SSaveEmployeeDetails",
+                                type: "POST",
+                                data: { empData: employeeData },
+                                success: function (response) {
+                                    if (response.isValid) {
+                                        location.reload();
+                                    }
+                                }
+                            });
+                        }
                     }
                 });
             });
