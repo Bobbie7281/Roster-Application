@@ -17,16 +17,15 @@ namespace Roster_Application.Models
         public string ?EmployeeSurname {  get; set; }    
         [Required]
         [DisplayName("Employee Address:")]
-
-        public int EmployeeAddress { get; set; }
+        public string EmployeeAddress { get; set; }
         [Required]
         [DisplayName("Employee Contact Number:")]
 
-        public int EmployeeContactNumber { get; set; }
+        public string EmployeeContactNumber { get; set; }
         [Required]
         [DisplayName("Employee Email Address:")]
 
-        public int EmployeeEmail { get; set; }
+        public string EmployeeEmail { get; set; }
 
         [Required]
         [ForeignKey ("CategoryId")]
