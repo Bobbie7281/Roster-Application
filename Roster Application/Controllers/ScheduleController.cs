@@ -78,23 +78,30 @@ namespace Roster_Application.Controllers
 
                 }
             }
+            try
+            {
+                //update the schedule with the data passed as parameters 
+                schedule!.ScheduleName = newSchName;
+                schedule.ScheduleMonTotHours = int.Parse(monHrs);
+                schedule.ScheduleTueTotHours = int.Parse(tueHrs);
+                schedule.ScheduleWedTotHours = int.Parse(wedHrs);
+                schedule.ScheduleThurTotHours = int.Parse(thurHrs);
+                schedule.ScheduleFriTotHours = int.Parse(friHrs);
+                schedule.ScheduleSatTotHours = int.Parse(satHrs);
+                schedule.ScheduleSunTotHours = int.Parse(sunHrs);
+                schedule.ScheduleTotalHours = int.Parse(totHours);
 
-            //update the schedule with the data passed as parameters 
-            schedule!.ScheduleName = newSchName;
-            schedule.ScheduleMonTotHours = int.Parse(monHrs);
-            schedule.ScheduleTueTotHours = int.Parse(tueHrs);
-            schedule.ScheduleWedTotHours = int.Parse(wedHrs);
-            schedule.ScheduleThurTotHours = int.Parse(thurHrs);
-            schedule.ScheduleFriTotHours = int.Parse(friHrs);
-            schedule.ScheduleSatTotHours = int.Parse(satHrs);
-            schedule.ScheduleSunTotHours = int.Parse(sunHrs);
-            schedule.ScheduleTotalHours = int.Parse(totHours);
+                _db.Schedules.Update(schedule);//update the database
+                _db.SaveChanges();//save the changes
 
-            _db.Schedules.Update(schedule);//update the database
-            _db.SaveChanges();//save the changes
-
-            TempData["Successful"] = "Data Saved Successsfully!";
-            isValid = true;
+                TempData["Successful"] = "Data Saved Successsfully!";
+                isValid = true;
+            }
+            catch (Exception ex) 
+            {
+                TempData["Unsuccessful"] = "Data note saved due to the following error:/n/n" + ex.Message;
+                isValid = false;
+            }
 
             return Json(new { isValid });
         }
