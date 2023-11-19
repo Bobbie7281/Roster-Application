@@ -11,7 +11,7 @@ Features to be included in this app are as follows:
 
 -Create client or area profile (Already functional)
 
--Create Employee profile. (Still in progress)
+-Create Employee profile. (Employee creation is ready. To include a  feature to be able to edit employee details).
 
 -Creating a roster. The Roster should have the necessary features to notify the user of any mistakes. (Still in progress)
 
