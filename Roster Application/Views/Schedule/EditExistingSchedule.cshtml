@@ -6,7 +6,6 @@
     <h1 class="display-4 text-center">Edit Schedule Data:</h1>
     <partial name="_Notifications" />
         
-    @*<form method="post" action="/Schedule/SCheckDataPriorSaving">*@
         <div class="mb-3 row p-3">
             <label class="p-0" style="font-size:x-large">Choose a schedule to Edit:</label>
             <div class="row mb-0 p-3">
@@ -24,7 +23,6 @@
                 </select>
             </div>
         </div>
-    @*</form>*@
          <div class="row">
            <label class="p-0" style="font-size:x-large" id="lbname">Edit Selected Schedule:</label>
             <input type="text" class="border p-3 form-control" name="name" id="scheduleName" disabled="disabled">
@@ -175,13 +173,10 @@
                             type: "POST",
                             data: { selectedSchedule: selectedName, newSchName: name, monHrs: mon, tueHrs: tue, wedHrs: wed, thurHrs: thur, friHrs: fri, satHrs: sat, sunHrs: sun, totHours: totalHours },
                             success: function (response) {
-                                if(response.isValid)
-                                {
-                                    //alert("Save Successfully");
-                                    //if (confirm) //after pressing the ok button of the message, the page will refresh
-                                    //{ 
-                                        location.reload();
-                                    //}
+                                if (response.isValid) {
+
+                                    location.reload();
+
                                 }
                             }
                         });
