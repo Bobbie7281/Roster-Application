@@ -5,5 +5,6 @@
         public List<ClientModel>? ClientList { get; set; }
         public List<ScheduleModel>? ScheduleList { get; set; }
         public List<CategoryModel>? CategoryList { get; set; }
+        public List<EmployeeModel>? EmployeeList { get; set; }
     }
 }
