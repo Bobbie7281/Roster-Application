@@ -268,11 +268,11 @@ namespace Roster_Application.Controllers
                 {
                     clientInfo.Add(info.ClientContactDetails);
                 }
-                if (info.ScheduleID != 0)
+                if (scheduleObj!.ScheduleName != null)
                 {
                     clientInfo.Add(scheduleObj.ScheduleName);
                 }
-                if (info.CategoryID != 0)
+                if (categoryObj!.CategoryName != null)
                 {
                     clientInfo.Add(categoryObj.CategoryName);
                 }
