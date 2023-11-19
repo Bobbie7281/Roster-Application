@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Roster_Application.Data;
 using Roster_Application.Models;
 using Roster_Application.Models.Models_Interface;
@@ -36,7 +37,31 @@ namespace Roster_Application.Controllers
         }
         public IActionResult EditExistingEmployee()
         {
-            return View();
+            _listsModel!.EmployeeList= _db.Employees.ToList();
+            _listsModel!.CategoryList= _db.Categories.ToList();
+            return View(_listsModel);
+        }
+        [HttpPost]
+        public IActionResult SEditEmployeeDetails(string categoryName, string selectedName, List<string> empData) 
+        {
+            bool isValid = false;
+            var employeeObj = _db.Employees.FirstOrDefault(x => x.EmployeeName == selectedName);
+            var categoryObj = _db.Categories.FirstOrDefault(x=> x.CategoryName == categoryName);
+
+            employeeObj!.EmployeeName = empData[0];
+            employeeObj!.EmployeeSurname= empData[1];
+            employeeObj!.EmployeeAddress = empData[2];
+            employeeObj!.EmployeeContactNumber= empData[3];
+            employeeObj!.EmployeeEmail= empData[4];
+            employeeObj!.CategoryID = categoryObj!.CategoryId;
+
+            _db.Employees.Update(employeeObj);
+            _db.SaveChanges();
+            isValid = true;
+            TempData["Successful"] = "Data Saved Successfully.";
+
+
+            return Json(new { isValid });
         }
         [HttpPost]
         public IActionResult SCheckDataPriorSaving(List<string> empData)
@@ -91,6 +116,41 @@ namespace Roster_Application.Controllers
             }
             
             return Json(new { isValid });
+        }
+        [HttpPost]
+        public IActionResult SGetData(string EmployeeName)
+        {
+            var employeeDetails = _db.Employees.FirstOrDefault(x => x.EmployeeName == EmployeeName);
+            var categoryDetails = _db.Categories.Find(employeeDetails!.CategoryID);
+
+            List<string> empData = new List<string>();
+
+            if(employeeDetails!.EmployeeName!= null)
+            {
+                empData.Add(employeeDetails!.EmployeeName);
+            }
+            if (employeeDetails!.EmployeeSurname != null)
+            {
+                empData.Add(employeeDetails!.EmployeeSurname);
+            }
+            if (employeeDetails!.EmployeeAddress != null)
+            {
+                empData.Add(employeeDetails!.EmployeeAddress);
+            }
+            if (employeeDetails!.EmployeeContactNumber != null)
+            {
+                empData.Add(employeeDetails!.EmployeeContactNumber);
+            }
+            if (employeeDetails!.EmployeeEmail != null)
+            {
+                empData.Add(employeeDetails!.EmployeeEmail);
+            }
+            if (categoryDetails!.CategoryName!=null)
+            {
+                empData.Add(categoryDetails!.CategoryName);
+            }
+
+            return Json(empData);
         }
     }
 }
