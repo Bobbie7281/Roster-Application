@@ -254,28 +254,18 @@ namespace Roster_Application.Controllers
 
             List<string> clientInfo = new();
 
-            if (info != null)
+            if(info != null&&
+                info.ClientName != null&&
+                info.ClientAddress != null&&
+                info.ClientContactDetails != null&&
+                scheduleObj!.ScheduleName != null&&
+                categoryObj!.CategoryName != null)
             {
-                if (info.ClientName != null)
-                {
-                    clientInfo.Add(info.ClientName);
-                }
-                if (info.ClientAddress != null)
-                {
-                    clientInfo.Add(info.ClientAddress);
-                }
-                if (info.ClientContactDetails != null)
-                {
-                    clientInfo.Add(info.ClientContactDetails);
-                }
-                if (scheduleObj!.ScheduleName != null)
-                {
-                    clientInfo.Add(scheduleObj.ScheduleName);
-                }
-                if (categoryObj!.CategoryName != null)
-                {
-                    clientInfo.Add(categoryObj.CategoryName);
-                }
+                clientInfo.Add(info.ClientName);
+                clientInfo.Add(info.ClientAddress);
+                clientInfo.Add(info.ClientContactDetails);
+                clientInfo.Add(scheduleObj.ScheduleName);
+                clientInfo.Add(categoryObj.CategoryName);
                 clientInfo.Add(info.TotalHours.ToString());
             }
 
