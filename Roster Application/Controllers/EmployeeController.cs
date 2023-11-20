@@ -48,18 +48,25 @@ namespace Roster_Application.Controllers
             var employeeObj = _db.Employees.FirstOrDefault(x => x.EmployeeName == selectedName);
             var categoryObj = _db.Categories.FirstOrDefault(x=> x.CategoryName == categoryName);
 
-            employeeObj!.EmployeeName = empData[0];
-            employeeObj!.EmployeeSurname= empData[1];
-            employeeObj!.EmployeeAddress = empData[2];
-            employeeObj!.EmployeeContactNumber= empData[3];
-            employeeObj!.EmployeeEmail= empData[4];
-            employeeObj!.CategoryID = categoryObj!.CategoryId;
+            try
+            {
+                employeeObj!.EmployeeName = empData[0];
+                employeeObj!.EmployeeSurname = empData[1];
+                employeeObj!.EmployeeAddress = empData[2];
+                employeeObj!.EmployeeContactNumber = empData[3];
+                employeeObj!.EmployeeEmail = empData[4];
+                employeeObj!.CategoryID = categoryObj!.CategoryId;
 
-            _db.Employees.Update(employeeObj);
-            _db.SaveChanges();
-            isValid = true;
-            TempData["Successful"] = "Data Saved Successfully.";
-
+                _db.Employees.Update(employeeObj);
+                _db.SaveChanges();
+                isValid = true;
+                TempData["Successful"] = "Data Saved Successfully.";
+            }
+            catch (Exception ex) 
+            {
+                TempData["Unsuccessful"] = "Data not saved due to the following message:/n/n" + ex.Message;
+                isValid = false;
+            }
 
             return Json(new { isValid });
         }
@@ -122,34 +129,22 @@ namespace Roster_Application.Controllers
         {
             var employeeDetails = _db.Employees.FirstOrDefault(x => x.EmployeeName == EmployeeName);
             var categoryDetails = _db.Categories.Find(employeeDetails!.CategoryID);
+            List<string> empData = new();
 
-            List<string> empData = new List<string>();
-
-            if(employeeDetails!.EmployeeName!= null)
+            if (employeeDetails.EmployeeName != null && 
+                employeeDetails!.EmployeeSurname != null &&
+                employeeDetails!.EmployeeAddress != null&&
+                employeeDetails!.EmployeeContactNumber != null&&
+                employeeDetails!.EmployeeEmail != null&&
+                categoryDetails!.CategoryName != null)
             {
                 empData.Add(employeeDetails!.EmployeeName);
-            }
-            if (employeeDetails!.EmployeeSurname != null)
-            {
                 empData.Add(employeeDetails!.EmployeeSurname);
-            }
-            if (employeeDetails!.EmployeeAddress != null)
-            {
                 empData.Add(employeeDetails!.EmployeeAddress);
-            }
-            if (employeeDetails!.EmployeeContactNumber != null)
-            {
                 empData.Add(employeeDetails!.EmployeeContactNumber);
-            }
-            if (employeeDetails!.EmployeeEmail != null)
-            {
                 empData.Add(employeeDetails!.EmployeeEmail);
-            }
-            if (categoryDetails!.CategoryName!=null)
-            {
                 empData.Add(categoryDetails!.CategoryName);
             }
-
             return Json(empData);
         }
     }
