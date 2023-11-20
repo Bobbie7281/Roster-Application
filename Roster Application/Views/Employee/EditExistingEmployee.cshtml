@@ -99,7 +99,7 @@
                     type: "POST",//The method will be of type post ([HttpPost])
                     data: { EmployeeName: selectEmployee },//selectEmployee variable will be passed to the parameter EmployeeName of the SGetData method
                     success: function (data) {//upon return the disabled attribute will be removed for the following elements
-                        document.getElementById("selectEmployee").setAttribute("disabled", "disabled");
+                        
                         document.getElementById("NewEmployeeName").removeAttribute("disabled");
                         document.getElementById("NewEmployeeSurname").removeAttribute("disabled");
                         document.getElementById("NewAddress").removeAttribute("disabled");
