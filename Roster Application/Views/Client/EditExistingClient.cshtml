@@ -12,12 +12,14 @@
             <div class="row mb-0 p-3">
                 <select class="form-select p-3" name="editClient" id="selectClient">
                     <option value="" disabled selected>Choose a client</option> @*This will serve as a placeholder in the dropdown list*@
-
-                    @foreach (var item in @Model.ClientList)
+                    @if (Model.ClientList != null)
                     {
-                        if (item.ClientName != "")
+                        @foreach (var item in @Model.ClientList)
                         {
-                            <option>@item.ClientName</option>
+                            if (item.ClientName != "")
+                            {
+                                <option>@item.ClientName</option>
+                            }
                         }
                     }
 
@@ -42,11 +44,14 @@
             <select class="mb-1 pt-4" style="font-size:large" name="schedule" id="selectSchedule" disabled="disabled">
                 <option value="" disabled selected>Choose a schedule</option> @*This will serve as a placeholder in the dropdown list*@
 
-                @foreach (var item in @Model.ScheduleList)
+                @if (Model.ScheduleList != null)
                 {
-                    if (item.ScheduleName != "")
+                    @foreach (var item in @Model.ScheduleList)
                     {
-                        <option>@item.ScheduleName</option>
+                        if (item.ScheduleName != "")
+                        {
+                            <option>@item.ScheduleName</option>
+                        }
                     }
                 }
             </select>
@@ -55,12 +60,15 @@
                 <label class="p-0" style="font-size:x-large">Category:</label>
             <select class="mb-1 pt-4" style="font-size:large" name="category" id="selectCatgory" disabled="disabled">
                 <option value="" disabled selected>Choose a Category</option> @*This will serve as a placeholder in the dropdown list*@
-
-                @foreach (var item in @Model.CategoryList)
+                
+                @if (Model.CategoryList != null)
                 {
-                    if (item.CategoryName != "")
+                    @foreach (var item in @Model.CategoryList)
                     {
-                        <option>@item.CategoryName</option>
+                        if (item.CategoryName != "")
+                        {
+                            <option>@item.CategoryName</option>
+                        }
                     }
                 }
 
@@ -100,26 +108,25 @@
 
             $("#selectClient").on("change", function () { //When a client name is selected 
                 var selectClient = $(this).find("option:selected").text(); //The client name will be saved in selectClient
+
+                var idsRemoveDisabledAttr = [$("#NewClientName"), $("#Address"), $("#Contact"), $("#selectSchedule"), $("#selectCatgory"), $("#save")];
+                var idsUploadData = [$("#NewClientName"), $("#Address"), $("#Contact"), $("#selectSchedule"), $("#selectCatgory"), $("#TotalHours")];
+
                 $.ajax({
                     url:"/Client/SGetData",//SGetData is a method located in the client controller 
                     type:"POST",//The method will be of type post ([HttpPost])
                     data: { clientName: selectClient },//selectClient variable will be passed to the parameter clientName of the SGetData method
                     success: function (data) {//upon return the disabled attribute will be removed for the following elements
-                        document.getElementById("selectClient").setAttribute("disabled", "disabled");
-                        document.getElementById("NewClientName").removeAttribute("disabled");
-                        document.getElementById("Address").removeAttribute("disabled");
-                        document.getElementById("Contact").removeAttribute("disabled");
-                        document.getElementById("selectSchedule").removeAttribute("disabled");
-                        document.getElementById("selectCatgory").removeAttribute("disabled");
-                        document.getElementById("save").removeAttribute("disabled");
-                        console.log(data[0], data[1], data[2], data[3], data[4], data[5]);
-                        //data returned from the method will be displayed in the following input fields
-                        $("#NewClientName").val(data[0]);
-                        $("#Address").val(data[1]);
-                        $("#Contact").val(data[2]);
-                        $("#selectSchedule").val(data[3]);
-                        $("#selectCatgory").val(data[4]);
-                        $("#TotalHours").val(data[5]);
+
+                        $.each(idsRemoveDisabledAttr, function (index, element) {
+
+                            $(element).removeAttr("disabled");
+
+                        });
+                        $.each(data, function (index, element) {
+                            idsUploadData[index].val(data[index]);
+
+                        });
                     },
                     error: function (xhr, status, error) {
                         console.log("Ajax Error: " + status + " - " + error);
@@ -158,6 +165,7 @@
                 var category = $("#selectCatgory").val();
                 var totalHours = $("#TotalHours").val();
                 var message = "The folowing errors where encountered:\n\n";
+
 
                 $.ajax({
                     url: "/Client/SCheckDataPriorSaving",//SCheckDataPriorSaving is a method located in the client controller.
