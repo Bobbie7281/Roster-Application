@@ -1,7 +1,7 @@
 ﻿@model List<CategoryModel>
-@{
-    //string static selectedOption="";
-}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/Scripts/EditExistingCategoryView/GetDetailsOfSelectedCategory.js"></script>
 
 <div class="text-primary p-3">
 
@@ -36,23 +36,4 @@
 </form>
 
 </div>
-
-@*This script is used to copy the selected text from the dropdown section to the input section for editing*@
-@section Scripts{
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script>
-
-        $(document).ready(function() {
-
-            $("#selectCategory").on("change", function () {
-                var selectOptionText = $(this).find("option:selected").text();
-                $("#input").val(selectOptionText);
-
-                //Once the category name is choosen for editing, the disabled attribute will change to enable.
-                document.getElementById("input").removeAttribute("disabled");
-                
-            });
-        });
-    </script>
-}
+  
