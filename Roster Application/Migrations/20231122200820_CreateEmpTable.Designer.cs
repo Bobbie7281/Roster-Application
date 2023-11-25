@@ -12,8 +12,8 @@ using Roster_Application.Data;
 namespace Roster_Application.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231115192303__AddedForeignKeyToEmployeeTable")]
-    partial class _AddedForeignKeyToEmployeeTable
+    [Migration("20231122200820_CreateEmpTable")]
+    partial class CreateEmpTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,7 +81,7 @@ namespace Roster_Application.Migrations
                     b.ToTable("Clients");
                 });
 
-            modelBuilder.Entity("Roster_Application.Models.EmployeeModel", b =>
+            modelBuilder.Entity("Roster_Application.Models.EmployeesModel", b =>
                 {
                     b.Property<int>("EmployeeId")
                         .ValueGeneratedOnAdd()
@@ -92,16 +92,23 @@ namespace Roster_Application.Migrations
                     b.Property<int>("CategoryID")
                         .HasColumnType("int");
 
-                    b.Property<int>("EmployeeAddress")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EmployeeContactNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeContactNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EmployeeEmail")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmployeeName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmployeeSurname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -109,7 +116,7 @@ namespace Roster_Application.Migrations
 
                     b.HasIndex("CategoryID");
 
-                    b.ToTable("Employees");
+                    b.ToTable("EmployeesModel");
                 });
 
             modelBuilder.Entity("Roster_Application.Models.ScheduleModel", b =>
@@ -172,7 +179,7 @@ namespace Roster_Application.Migrations
                     b.Navigation("ScheduleId");
                 });
 
-            modelBuilder.Entity("Roster_Application.Models.EmployeeModel", b =>
+            modelBuilder.Entity("Roster_Application.Models.EmployeesModel", b =>
                 {
                     b.HasOne("Roster_Application.Models.CategoryModel", "CategoryId")
                         .WithMany()

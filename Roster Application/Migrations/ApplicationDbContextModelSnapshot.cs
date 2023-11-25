@@ -36,7 +36,7 @@ namespace Roster_Application.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Roster_Application.Models.ClientModel", b =>
@@ -75,10 +75,10 @@ namespace Roster_Application.Migrations
 
                     b.HasIndex("ScheduleID");
 
-                    b.ToTable("Clients");
+                    b.ToTable("Clients", (string)null);
                 });
 
-            modelBuilder.Entity("Roster_Application.Models.EmployeeModel", b =>
+            modelBuilder.Entity("Roster_Application.Models.EmployeesModel", b =>
                 {
                     b.Property<int>("EmployeeId")
                         .ValueGeneratedOnAdd()
@@ -113,7 +113,7 @@ namespace Roster_Application.Migrations
 
                     b.HasIndex("CategoryID");
 
-                    b.ToTable("Employees");
+                    b.ToTable("EmployeesModel", (string)null);
                 });
 
             modelBuilder.Entity("Roster_Application.Models.ScheduleModel", b =>
@@ -154,7 +154,7 @@ namespace Roster_Application.Migrations
 
                     b.HasKey("ScheduleId");
 
-                    b.ToTable("Schedules");
+                    b.ToTable("Schedules", (string)null);
                 });
 
             modelBuilder.Entity("Roster_Application.Models.ClientModel", b =>
@@ -176,7 +176,7 @@ namespace Roster_Application.Migrations
                     b.Navigation("ScheduleId");
                 });
 
-            modelBuilder.Entity("Roster_Application.Models.EmployeeModel", b =>
+            modelBuilder.Entity("Roster_Application.Models.EmployeesModel", b =>
                 {
                     b.HasOne("Roster_Application.Models.CategoryModel", "CategoryId")
                         .WithMany()
