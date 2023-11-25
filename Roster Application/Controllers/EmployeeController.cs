@@ -37,7 +37,7 @@ namespace Roster_Application.Controllers
         }
         public IActionResult EditExistingEmployee()
         {
-            _listsModel!.EmployeeList= _db.Employees.ToList();
+            _listsModel!.EmployeeList= _db.Employee.ToList();
             _listsModel!.CategoryList= _db.Categories.ToList();
             return View(_listsModel);
         }
@@ -45,7 +45,7 @@ namespace Roster_Application.Controllers
         public IActionResult SEditEmployeeDetails(string categoryName, string selectedName, List<string> empData) 
         {
             bool isValid = false;
-            var employeeObj = _db.Employees.FirstOrDefault(x => x.EmployeeName == selectedName);
+            var employeeObj = _db.Employee.FirstOrDefault(x => x.EmployeeName == selectedName);
             var categoryObj = _db.Categories.FirstOrDefault(x=> x.CategoryName == categoryName);
 
             try
@@ -57,7 +57,7 @@ namespace Roster_Application.Controllers
                 employeeObj!.EmployeeEmail = empData[4];
                 employeeObj!.CategoryID = categoryObj!.CategoryId;
 
-                _db.Employees.Update(employeeObj);
+                _db.Employee.Update(employeeObj);
                 _db.SaveChanges();
                 isValid = true;
                 TempData["Successful"] = "Data Saved Successfully.";
@@ -111,7 +111,7 @@ namespace Roster_Application.Controllers
                 _employeeModel!.EmployeeEmail = empData[4];
                 _employeeModel!.CategoryID = category!.CategoryId;
 
-                _db.Employees.Add((EmployeeModel)_employeeModel);
+                _db.Employee.Add((EmployeesModel)_employeeModel);
                 _db.SaveChanges();
                 isValid = true;
                 TempData["Successful"] = "Data Saved Successfully.";
@@ -127,7 +127,7 @@ namespace Roster_Application.Controllers
         [HttpPost]
         public IActionResult SGetData(string EmployeeName)
         {
-            var employeeDetails = _db.Employees.FirstOrDefault(x => x.EmployeeName == EmployeeName);
+            var employeeDetails = _db.Employee.FirstOrDefault(x => x.EmployeeName == EmployeeName);
             var categoryDetails = _db.Categories.Find(employeeDetails!.CategoryID);
             List<string> empData = new();
 
