@@ -10,11 +10,11 @@ namespace Roster_Application.Models
         [Key]
         public int EmployeeId { get; set; }
         [Required]
-        [DisplayName ("Employee Name:")]
-        public string ?EmployeeName { get; set; }
+        [DisplayName("Employee Name:")]
+        public string? EmployeeName { get; set; }
         [Required]
-        [DisplayName ("Surname:")]
-        public string ?EmployeeSurname {  get; set; }    
+        [DisplayName("Surname:")]
+        public string? EmployeeSurname { get; set; }
         [Required]
         [DisplayName("Employee Address:")]
         public string? EmployeeAddress { get; set; }
@@ -28,9 +28,9 @@ namespace Roster_Application.Models
         public string? EmployeeEmail { get; set; }
 
         [Required]
-        [ForeignKey ("CategoryId")]
-        [DisplayName ("Category")]
+        [ForeignKey("CategoryId")]
+        [DisplayName("Category")]
         public int CategoryID { get; set; }
-        public CategoryModel ?CategoryId { get; set; }
+        public CategoryModel? CategoryId { get; set; }
     }
 }
