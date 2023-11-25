@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Connection")));
 builder.Services.AddTransient<ICategoryModel, CategoryModel>();
 builder.Services.AddTransient<IClientModel, ClientModel>();
-builder.Services.AddTransient<IEmployeeModel, EmployeeModel>();
+builder.Services.AddTransient<IEmployeeModel, EmployeesModel>();
 builder.Services.AddTransient<IScheduleModel, ScheduleModel>();
 builder.Services.AddTransient<IListsModel, ListsModel>();
 // Add services to the container.
