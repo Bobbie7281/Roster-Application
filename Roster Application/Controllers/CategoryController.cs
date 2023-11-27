@@ -2,6 +2,7 @@
 using Roster_Application.Data;
 using Roster_Application.Models;
 using Roster_Application.Models.Models_Interface;
+using System.Collections.Generic;
 
 namespace Roster_Application.Controllers
 {
@@ -97,7 +98,31 @@ namespace Roster_Application.Controllers
         }
         public IActionResult ListOfClientsPerCategory()
         {
-            return View();
+            var categoryList = _db.Categories.ToList();
+            return View(categoryList);
+        }
+        [HttpPost]
+        public IActionResult SGetClients(string categoryName)
+        {
+            var getCategory = _db.Categories.FirstOrDefault(x => x.CategoryName==categoryName);
+            var getClientList = _db.Clients.Where(x => x.CategoryID ==getCategory!.CategoryId).ToList();
+            List<List<string>>data = new();
+            List<string> ClientName = new();
+            List<string> CategoryId = new();
+
+           
+            foreach (var client in getClientList)
+            {
+                if (client.ClientName != null && client.CategoryID!=null)
+                {
+                    ClientName.Add(client.ClientName);
+                    CategoryId.Add(client.CategoryID.ToString());
+                }
+            }
+            data.Add(ClientName);
+            data.Add(CategoryId);
+
+            return Json(data);
         }
     }
 }
