@@ -1,1 +1,95 @@
-﻿<h1>List of clients per category view</h1>
+﻿@model List<CategoryModel>
+
+
+<div class="text-primary p-3">
+
+    <h1 class="display-4 text-center">List Of Clients Per Category.</h1>
+    <partial name="_Notifications" />
+
+    <form method="post" action="/Category/AddNewCategoryName">
+        <div class="mb-3 row p-3">
+            <label class="p-0" style="font-size:x-large">Choose A Category:</label>
+            <div class="row mb-5 p-3">
+                <select class="form-select" name="Category" id="selectCategory">
+                    <option value="" disabled selected>Choose a category</option> @*This will serve as a placeholder in the dropdown list*@
+
+                    @foreach (var item in Model)
+                    {
+                        if (item.CategoryName != "")
+                        {
+                            <option>@item.CategoryName</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="row">
+                <label class="p-0" style="font-size:x-large">Result</label>
+            </div>
+        </div>
+        <div class="container">
+        <table class="table">
+            <thead>
+               <tr>
+                   <th>Client Name</th>
+                   <th>Category Name </th>
+               </tr> 
+            </thead>
+                <tbody id="ResultsTable">
+                
+            </tbody>
+        </table>
+        </div>
+        <button class="btn btn-primary btn-lg" asp-controller="Category" asp-action="CategoryOptions">Back</button>
+
+    </form>
+
+</div>
+
+@section Scripts
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#selectCategory").on("change", function () {
+                var selectedCategory = $(this).find("option:selected").text();
+                var counter = 0;
+
+                $.ajax({
+                    url: "/Category/SGetClients",
+                    type: "POST",
+                    data: { categoryName : selectedCategory },
+                    success: function (data) {
+
+                        function populateTable() {
+                            var tbody = $("#ResultsTable");
+                            tbody.empty();
+
+                            console.log(data);
+                            if (data[0].length > 0) {
+
+                                do {
+                                    console.log(counter);
+                                    var row = '<tr>' +
+                                        '<td>' + data[0][0 + counter] + '</td>' +
+                                        '<td>' + data[1][0 + counter] + '</td>' +
+
+                                        '</tr>';
+                                    counter++;
+
+                                    tbody.append(row);
+                                } while (counter != data[0].length)
+
+                            }
+                        }
+                        populateTable();
+                    },
+                    error: function(error){
+                        console.log(error);
+                    }
+                });
+            });
+        });
+    </script>
+}
+
