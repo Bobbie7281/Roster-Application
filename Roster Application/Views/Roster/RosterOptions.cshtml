@@ -1,1 +1,10 @@
-﻿<h1>Roster Options</h1>
+﻿<div class="text-center">
+    <h1 class="display-4">Roster options</h1>
+
+    <form method="post" action="/Home">
+        <div class="d-grid gap-4">
+            <button class="btn btn-lg btn-primary" type="submit" asp-controller="Roster" asp-action="CreateRoster">Roster Options</button>
+            @* <button class="btn btn-lg btn-primary" type="submit" asp-controller="Employee" asp-action="EditExistingEmployee">Edit Existing Employee</button> *@
+        </div>
+    </form>
+</div>
