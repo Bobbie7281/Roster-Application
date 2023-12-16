@@ -9,28 +9,31 @@ namespace Roster_Application.Models
     {
         [Key]
         public int EmployeeId { get; set; }
+
         [Required]
         [DisplayName("Employee Name:")]
         public string? EmployeeName { get; set; }
+
         [Required]
         [DisplayName("Surname:")]
         public string? EmployeeSurname { get; set; }
+
         [Required]
         [DisplayName("Employee Address:")]
         public string? EmployeeAddress { get; set; }
+
         [Required]
         [DisplayName("Employee Contact Number:")]
-
         public string? EmployeeContactNumber { get; set; }
+
         [Required]
         [DisplayName("Employee Email Address:")]
-
         public string? EmployeeEmail { get; set; }
 
         [Required]
         [ForeignKey("CategoryId")]
         [DisplayName("Category")]
-        public int CategoryID { get; set; }
+        public int CatID { get; set; }
         public CategoryModel? CategoryId { get; set; }
     }
 }

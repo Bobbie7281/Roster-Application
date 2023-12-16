@@ -10,7 +10,7 @@ namespace Roster_Application.Models.Models_Interface
         public string? EmployeeAddress { get; set; }
         public string? EmployeeContactNumber { get; set; }
         public string? EmployeeEmail { get; set; }
-        public int CategoryID { get; set; }
+        public int CatID { get; set; }
         public CategoryModel? CategoryId { get; set; }
     }
 }

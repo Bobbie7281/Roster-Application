@@ -37,7 +37,7 @@ namespace Roster_Application.Controllers
         }
         public IActionResult EditExistingEmployee()
         {
-            _listsModel!.EmployeeList= _db.Employee.ToList();
+            _listsModel!.EmployeeList = _db.Employees.ToList();
             _listsModel!.CategoryList= _db.Categories.ToList();
             return View(_listsModel);
         }
@@ -45,7 +45,7 @@ namespace Roster_Application.Controllers
         public IActionResult SEditEmployeeDetails(string categoryName, string selectedName, List<string> empData) 
         {
             bool isValid = false;
-            var employeeObj = _db.Employee.FirstOrDefault(x => x.EmployeeName == selectedName);
+            var employeeObj = _db.Employees.FirstOrDefault(x => x.EmployeeName == selectedName);
             var categoryObj = _db.Categories.FirstOrDefault(x=> x.CategoryName == categoryName);
 
             try
@@ -55,9 +55,9 @@ namespace Roster_Application.Controllers
                 employeeObj!.EmployeeAddress = empData[2];
                 employeeObj!.EmployeeContactNumber = empData[3];
                 employeeObj!.EmployeeEmail = empData[4];
-                employeeObj!.CategoryID = categoryObj!.CategoryId;
+                employeeObj!.CatID = categoryObj!.CategoryId;
 
-                _db.Employee.Update(employeeObj);
+                _db.Employees.Update(employeeObj);
                 _db.SaveChanges();
                 isValid = true;
                 TempData["Successful"] = "Data Saved Successfully.";
@@ -109,9 +109,9 @@ namespace Roster_Application.Controllers
                 _employeeModel!.EmployeeAddress = empData[2];
                 _employeeModel!.EmployeeContactNumber = empData[3];
                 _employeeModel!.EmployeeEmail = empData[4];
-                _employeeModel!.CategoryID = category!.CategoryId;
+                _employeeModel!.CatID = category!.CategoryId;
 
-                _db.Employee.Add((EmployeesModel)_employeeModel);
+                _db.Employees.Add((EmpModel)_employeeModel);
                 _db.SaveChanges();
                 isValid = true;
                 TempData["Successful"] = "Data Saved Successfully.";
@@ -125,10 +125,10 @@ namespace Roster_Application.Controllers
             return Json(new { isValid });
         }
         [HttpPost]
-        public IActionResult SGetData(string EmployeeName)
+        public IActionResult SGetData(string EmployeeName)  
         {
-            var employeeDetails = _db.Employee.FirstOrDefault(x => x.EmployeeName == EmployeeName);
-            var categoryDetails = _db.Categories.Find(employeeDetails!.CategoryID);
+            var employeeDetails = _db.Employees.FirstOrDefault(x => x.EmployeeName == EmployeeName);
+            var categoryDetails = _db.Categories.Find(employeeDetails!.CatID);
             List<string> empData = new();
 
             if (employeeDetails.EmployeeName != null && 

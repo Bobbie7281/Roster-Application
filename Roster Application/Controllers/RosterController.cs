@@ -11,18 +11,27 @@ namespace Roster_Application.Controllers
         IClientModel? _clientModel;
         IEmployeeModel? _employeeModel;
         IScheduleModel? _scheduleModel;
-        public RosterController(ApplicationDbContext db, ICategoryModel categoryModel, IClientModel clientModel, IEmployeeModel employeeModel, IScheduleModel scheduleModel)
+        IListsModel? _listsModel;
+        public RosterController(ApplicationDbContext db, ICategoryModel categoryModel, IClientModel clientModel, IEmployeeModel employeeModel, IScheduleModel scheduleModel, IListsModel listsModel)
         {
             _db = db;
             _clientModel = clientModel;
             _employeeModel = employeeModel;
             _scheduleModel = scheduleModel;
             _categoryModel = categoryModel;
+            _listsModel = listsModel;
         }
         [HttpPost]
         public IActionResult RosterOptions()
         {
             return View();
+        }
+
+        public IActionResult CreateRoster()
+        {
+            _listsModel!.ClientList = _db.Clients.ToList();
+            
+            return View(_listsModel);
         }
     }
 }

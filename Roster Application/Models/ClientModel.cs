@@ -27,13 +27,13 @@ namespace Roster_Application.Models
         [Required]
         [ForeignKey("CategoryId")]
         [DisplayName ("Category:")]
-        public int ?CategoryID {  get; set; }
+        public int ?CatID {  get; set; }
         public CategoryModel ?CategoryId { get; set; }
 
         [Required]
         [ForeignKey("ScheduleId")]
         [DisplayName("Schedule:")]
-        public int ScheduleID { get; set; }
+        public int Schedule { get; set; }
         public ScheduleModel ?ScheduleId { get; set; }
 
         [Required]

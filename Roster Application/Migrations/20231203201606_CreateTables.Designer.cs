@@ -12,8 +12,8 @@ using Roster_Application.Data;
 namespace Roster_Application.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231030192902_AddCategoryIdAsForeignkeyInTheClientTable")]
-    partial class AddCategoryIdAsForeignkeyInTheClientTable
+    [Migration("20231203201606_CreateTables")]
+    partial class CreateTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,7 +50,7 @@ namespace Roster_Application.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClientId"));
 
-                    b.Property<int?>("CategoryID")
+                    b.Property<int?>("CatID")
                         .IsRequired()
                         .HasColumnType("int");
 
@@ -66,7 +66,7 @@ namespace Roster_Application.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ScheduleID")
+                    b.Property<int>("Schedule")
                         .HasColumnType("int");
 
                     b.Property<int>("TotalHours")
@@ -74,14 +74,14 @@ namespace Roster_Application.Migrations
 
                     b.HasKey("ClientId");
 
-                    b.HasIndex("CategoryID");
+                    b.HasIndex("CatID");
 
-                    b.HasIndex("ScheduleID");
+                    b.HasIndex("Schedule");
 
                     b.ToTable("Clients");
                 });
 
-            modelBuilder.Entity("Roster_Application.Models.EmployeeModel", b =>
+            modelBuilder.Entity("Roster_Application.Models.EmpModel", b =>
                 {
                     b.Property<int>("EmployeeId")
                         .ValueGeneratedOnAdd()
@@ -89,23 +89,32 @@ namespace Roster_Application.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"));
 
-                    b.Property<int>("EmployeeAddress")
+                    b.Property<int>("CatID")
                         .HasColumnType("int");
 
-                    b.Property<int>("EmployeeCategory")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EmployeeContactNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeContactNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EmployeeEmail")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmployeeName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("EmployeeSurname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("EmployeeId");
+
+                    b.HasIndex("CatID");
 
                     b.ToTable("Employees");
                 });
@@ -137,6 +146,9 @@ namespace Roster_Application.Migrations
                     b.Property<int>("ScheduleThurTotHours")
                         .HasColumnType("int");
 
+                    b.Property<int>("ScheduleTotalHours")
+                        .HasColumnType("int");
+
                     b.Property<int>("ScheduleTueTotHours")
                         .HasColumnType("int");
 
@@ -152,19 +164,30 @@ namespace Roster_Application.Migrations
                 {
                     b.HasOne("Roster_Application.Models.CategoryModel", "CategoryId")
                         .WithMany()
-                        .HasForeignKey("CategoryID")
+                        .HasForeignKey("CatID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Roster_Application.Models.ScheduleModel", "ScheduleId")
                         .WithMany()
-                        .HasForeignKey("ScheduleID")
+                        .HasForeignKey("Schedule")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("CategoryId");
 
                     b.Navigation("ScheduleId");
+                });
+
+            modelBuilder.Entity("Roster_Application.Models.EmpModel", b =>
+                {
+                    b.HasOne("Roster_Application.Models.CategoryModel", "CategoryId")
+                        .WithMany()
+                        .HasForeignKey("CatID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CategoryId");
                 });
 #pragma warning restore 612, 618
         }

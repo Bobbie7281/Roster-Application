@@ -66,8 +66,8 @@ namespace Roster_Application.Controllers
             clientToEdit!.ClientName = newClientName;
             clientToEdit.ClientAddress = address;
             clientToEdit.ClientContactDetails= contact;
-            clientToEdit.ScheduleID = scheduleObj!.ScheduleId;
-            clientToEdit.CategoryID = categoryObj!.CategoryId;
+            clientToEdit.Schedule = scheduleObj!.ScheduleId;
+            clientToEdit.CatID = categoryObj!.CategoryId;
             clientToEdit.TotalHours = int.Parse(totalHours);
 
             _db.Clients.Update(clientToEdit);
@@ -234,8 +234,8 @@ namespace Roster_Application.Controllers
             _clientModel!.ClientName = clientName;
             _clientModel.ClientAddress = address;
             _clientModel.ClientContactDetails = contactNum;
-            _clientModel.ScheduleID = scheduleObj!.ScheduleId;
-            _clientModel.CategoryID = categoryObj!.CategoryId;
+            _clientModel.Schedule = scheduleObj!.ScheduleId;
+            _clientModel.CatID = categoryObj!.CategoryId;
             _clientModel.TotalHours = totalHours;
 
             _db.Add(_clientModel);
@@ -249,8 +249,8 @@ namespace Roster_Application.Controllers
         public IActionResult SGetData(string clientName)
         {
             var info = _db.Clients.FirstOrDefault(x => x.ClientName == clientName);
-            var scheduleObj = _db.Schedules.FirstOrDefault(predicate: x => x.ScheduleId == info!.ScheduleID);
-            var categoryObj = _db.Categories.FirstOrDefault(predicate: x => x.CategoryId == info!.CategoryID);
+            var scheduleObj = _db.Schedules.FirstOrDefault(predicate: x => x.ScheduleId == info!.Schedule);
+            var categoryObj = _db.Categories.FirstOrDefault(predicate: x => x.CategoryId == info!.CatID);
 
             List<string> clientInfo = new();
 

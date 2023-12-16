@@ -105,7 +105,7 @@ namespace Roster_Application.Controllers
         public IActionResult SGetClients(string categoryName)
         {
             var getCategory = _db.Categories.FirstOrDefault(x => x.CategoryName==categoryName);
-            var getClientList = _db.Clients.Where(x => x.CategoryID ==getCategory!.CategoryId).ToList();
+            var getClientList = _db.Clients.Where(x => x.CatID ==getCategory!.CategoryId).ToList();
             List<List<string>>data = new();
             List<string> ClientName = new();
             List<string> CategoryId = new();
@@ -113,10 +113,10 @@ namespace Roster_Application.Controllers
            
             foreach (var client in getClientList)
             {
-                if (client.ClientName != null && client.CategoryID!=null)
+                if (client.ClientName != null && client.CatID!=null)
                 {
                     ClientName.Add(client.ClientName);
-                    CategoryId.Add(client.CategoryID.ToString());
+                    CategoryId.Add(client.CatID.ToString());
                 }
             }
             data.Add(ClientName);

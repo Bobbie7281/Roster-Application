@@ -36,7 +36,7 @@ namespace Roster_Application.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Roster_Application.Models.ClientModel", b =>
@@ -47,7 +47,7 @@ namespace Roster_Application.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClientId"));
 
-                    b.Property<int?>("CategoryID")
+                    b.Property<int?>("CatID")
                         .IsRequired()
                         .HasColumnType("int");
 
@@ -63,7 +63,7 @@ namespace Roster_Application.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ScheduleID")
+                    b.Property<int>("Schedule")
                         .HasColumnType("int");
 
                     b.Property<int>("TotalHours")
@@ -71,14 +71,14 @@ namespace Roster_Application.Migrations
 
                     b.HasKey("ClientId");
 
-                    b.HasIndex("CategoryID");
+                    b.HasIndex("CatID");
 
-                    b.HasIndex("ScheduleID");
+                    b.HasIndex("Schedule");
 
-                    b.ToTable("Clients", (string)null);
+                    b.ToTable("Clients");
                 });
 
-            modelBuilder.Entity("Roster_Application.Models.EmployeesModel", b =>
+            modelBuilder.Entity("Roster_Application.Models.EmpModel", b =>
                 {
                     b.Property<int>("EmployeeId")
                         .ValueGeneratedOnAdd()
@@ -86,7 +86,7 @@ namespace Roster_Application.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"));
 
-                    b.Property<int>("CategoryID")
+                    b.Property<int>("CatID")
                         .HasColumnType("int");
 
                     b.Property<string>("EmployeeAddress")
@@ -111,9 +111,9 @@ namespace Roster_Application.Migrations
 
                     b.HasKey("EmployeeId");
 
-                    b.HasIndex("CategoryID");
+                    b.HasIndex("CatID");
 
-                    b.ToTable("EmployeesModel", (string)null);
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("Roster_Application.Models.ScheduleModel", b =>
@@ -154,20 +154,20 @@ namespace Roster_Application.Migrations
 
                     b.HasKey("ScheduleId");
 
-                    b.ToTable("Schedules", (string)null);
+                    b.ToTable("Schedules");
                 });
 
             modelBuilder.Entity("Roster_Application.Models.ClientModel", b =>
                 {
                     b.HasOne("Roster_Application.Models.CategoryModel", "CategoryId")
                         .WithMany()
-                        .HasForeignKey("CategoryID")
+                        .HasForeignKey("CatID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Roster_Application.Models.ScheduleModel", "ScheduleId")
                         .WithMany()
-                        .HasForeignKey("ScheduleID")
+                        .HasForeignKey("Schedule")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -176,11 +176,11 @@ namespace Roster_Application.Migrations
                     b.Navigation("ScheduleId");
                 });
 
-            modelBuilder.Entity("Roster_Application.Models.EmployeesModel", b =>
+            modelBuilder.Entity("Roster_Application.Models.EmpModel", b =>
                 {
                     b.HasOne("Roster_Application.Models.CategoryModel", "CategoryId")
                         .WithMany()
-                        .HasForeignKey("CategoryID")
+                        .HasForeignKey("CatID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

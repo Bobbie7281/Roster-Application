@@ -9,9 +9,9 @@ namespace Roster_Application.Models.Models_Interface
         public string? ClientName { get; set; }
         public string? ClientAddress { get; set; }
         public string? ClientContactDetails { get; set; }
-        public int? CategoryID { get; set; }
+        public int? CatID { get; set; }
         public CategoryModel? CategoryId { get; set; }
-        public int ScheduleID { get; set; }
+        public int Schedule { get; set; }
         public ScheduleModel? ScheduleId { get; set; }
         public int TotalHours { get; set; }
     }

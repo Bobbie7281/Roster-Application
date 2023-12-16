@@ -70,7 +70,7 @@ namespace Roster_Application.Controllers
 
             foreach (var client in clients) //Loop through all the clients 
             {
-                if (client.ScheduleID == schedule!.ScheduleId) //check if the schedule id of the client matches to the schedule id of the schedule which is being edited 
+                if (client.Schedule == schedule!.ScheduleId) //check if the schedule id of the client matches to the schedule id of the schedule which is being edited 
                 {
                     client.TotalHours = int.Parse(totHours);//if it matches get the new total hours passed as a parameter and save it in the total hours of the client with the same schedule.
                     _db.Clients.Update(client); //update the database
