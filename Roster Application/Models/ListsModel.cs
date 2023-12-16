@@ -9,6 +9,6 @@ namespace Roster_Application.Models
         public List<ClientModel>? ClientList  { get; set; }
         public List<ScheduleModel>? ScheduleList { get; set; }
         public List<CategoryModel>? CategoryList { get; set; }
-        public List<EmployeesModel>? EmployeeList { get; set; }
+        public List<EmpModel>? EmployeeList { get; set; }
     }
 }
