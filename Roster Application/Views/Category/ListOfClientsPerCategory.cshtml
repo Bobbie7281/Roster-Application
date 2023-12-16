@@ -11,30 +11,27 @@
             <label class="p-0" style="font-size:x-large">Choose A Category:</label>
             <div class="row mb-5 p-3">
                 <select class="form-select" name="Category" id="selectCategory">
-                    <option value="" disabled selected>Choose a category</option> @*This will serve as a placeholder in the dropdown list*@
+                    <option value="" disabled selected style="font-size:large">Choose a category</option> @*This will serve as a placeholder in the dropdown list*@
 
                     @foreach (var item in Model)
                     {
                         if (item.CategoryName != "")
                         {
-                            <option>@item.CategoryName</option>
+                            <option style="font-size:large">@item.CategoryName</option>
                         }
                     }
                 </select>
             </div>
-            <div class="row">
-                <label class="p-0" style="font-size:x-large">Result</label>
-            </div>
         </div>
         <div class="container">
-        <table class="table">
+            <table class="table" style="font-size:x-large">
             <thead>
                <tr>
-                   <th>Client Name</th>
-                   <th>Category Name </th>
+                   <th style="text-align: center">Client Name</th>
+                   <th style ="text-align: center">Category Number </th>
                </tr> 
             </thead>
-                <tbody id="ResultsTable">
+                <tbody style ="text-align: center" id="ResultsTable">
                 
             </tbody>
         </table>
@@ -73,7 +70,6 @@
                                     var row = '<tr>' +
                                         '<td>' + data[0][0 + counter] + '</td>' +
                                         '<td>' + data[1][0 + counter] + '</td>' +
-
                                         '</tr>';
                                     counter++;
 
